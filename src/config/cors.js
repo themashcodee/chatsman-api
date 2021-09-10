@@ -1,5 +1,5 @@
 const corsOption = {
-    origin: 'http://localhost:3000',
+    origin: 'https://chatsman.vercel.app',
     // origin: "*",
     credentials: true,
 }
