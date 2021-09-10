@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <title>Chatsman</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+    </style>
+  </head>
+  <body
+    style="
+      font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+        Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+    "
+  >
+    <section
+      class="page"
+      style="
+        width: 100%;
+        background: #333;
+        height: 100vh;
+        padding: 25px;
+        height: max-content;
+        color: #fff;
+      "
+    >
+      <header style="width: 100%; height: 60px; user-select: none">
+        <a
+          href="https://chatsman.vercel.app"
+          style="
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            height: 100%;
+          "
+        >
+          <img
+            style="width: 40px; height: 40px"
+            src="https://chatsman.vercel.app/favicon.png"
+            alt="logo"
+          />
+          <h1
+            class="heading"
+            style="
+              font-weight: 500;
+              padding-left: 10px;
+              font-size: 32px;
+              color: #fff;
+            "
+          >
+            Chatsman
+          </h1>
+        </a>
+      </header>
+
+      <article style="padding: 10px 0 20px 0">
+        <div
+          class="title"
+          style="font-size: 25px; padding: 0 0 10px 0; user-select: none"
+        >
+          Hi
+          <span class="bold" style="font-weight: 500; color: #fff">${name}</span
+          >,
+        </div>
+        <div class="content">
+          <p style="color: #fff; font-size: 18px">
+            We are happy you signed up for Chatsman. To start chatting with your
+            friends and family, kindly note this Secret code somewhere because
+            it will be required for any kind of account modification.
+          </p>
+        </div>
+
+        <article style="padding: 10px 0; font-size: 40px; font-weight: 500">
+          ${secret}
+        </article>
+
+        <footer style="user-select: none; color: #fff; font-size: 18px">
+          <p>Welcome to Chatsman</p>
+          <p>Team Chatsman</p>
+        </footer>
+
+        <div
+          class="notice"
+          style="
+            font-size: 14px;
+            padding-top: 10px;
+            color: #aaa;
+            user-select: none;
+          "
+        >
+          You have received this email because we have received a registration
+          request from this email address.
+        </div>
+      </article>
+    </section>
+  </body>
+</html>
