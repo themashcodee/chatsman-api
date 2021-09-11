@@ -30,7 +30,7 @@ const typeDefs = gql`
         getConversations:GetConversationsResponseType!
     }
     type Mutation{
-        createConversation(name:String,members:[ID!]!,isGroup:Boolean!,image:String):CreateConversationResponseType!
+        createConversation(name:String,members:[String!]!,isGroup:Boolean!,image:String):CreateConversationResponseType!
         loginUser(email:String!,password:String!,secret:Int!): LoginUserResponseType!
         createUser(payload:CreateUserInputType!): CreateUserResponseType!
     }
