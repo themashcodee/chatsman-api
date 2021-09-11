@@ -5,7 +5,7 @@ async function Logout({ args, User, res }) {
         const isUser = await User.findById(id)
         if (!isUser) return { success: false, message: "User does not exist!" }
         if (isUser.secret !== secret) return { success: false, message: "Wrong Secret!" }
-        res.clearCookie('refreshToken')
+        res.clearCookie('refreshToken', { path: "/", maxAge: 0 })
 
         return { success: true, message: "User Logged out!" }
     } catch (err) {
