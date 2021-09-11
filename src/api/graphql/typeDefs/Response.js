@@ -33,4 +33,11 @@ const GetConversationsResponseType =
         conversations:[Conversation]
     }`
 
-module.exports = { GetUserResponseType, GetConversationsResponseType, CreateConversationResponseType, LoginUserResponseType, CreateUserResponseType }
+const LogoutResponseType =
+    `type LogoutResponseType implements ResponseType{
+        success:Boolean!
+        message:String!
+    }
+    `
+
+module.exports = { LogoutResponseType, GetUserResponseType, GetConversationsResponseType, CreateConversationResponseType, LoginUserResponseType, CreateUserResponseType }

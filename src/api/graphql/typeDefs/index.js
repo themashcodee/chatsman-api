@@ -4,7 +4,7 @@ const ConversationType = require('./Conversation')
 const MessageType = require('./Message')
 
 const { CreateUserInputType } = require('./Input')
-const { LoginUserResponseType, CreateUserResponseType, GetConversationsResponseType, CreateConversationResponseType, GetUserResponseType } = require('./Response')
+const { LogoutResponseType, LoginUserResponseType, CreateUserResponseType, GetConversationsResponseType, CreateConversationResponseType, GetUserResponseType } = require('./Response')
 
 const typeDefs = gql`
     interface ResponseType{
@@ -21,6 +21,7 @@ const typeDefs = gql`
     ${CreateConversationResponseType}
     ${GetUserResponseType}
     ${GetConversationsResponseType}
+    ${LogoutResponseType}
 
     ${CreateUserInputType}
     
@@ -30,6 +31,7 @@ const typeDefs = gql`
         getConversations:GetConversationsResponseType!
     }
     type Mutation{
+        logout(secret:Int!,id:ID!):LogoutResponseType!
         createConversation(name:String,members:[String!]!,isGroup:Boolean!,image:String):CreateConversationResponseType!
         loginUser(email:String!,password:String!,secret:Int!): LoginUserResponseType!
         createUser(payload:CreateUserInputType!): CreateUserResponseType!

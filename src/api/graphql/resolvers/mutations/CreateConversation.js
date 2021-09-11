@@ -5,22 +5,18 @@ async function CreateConversation({ args, Conversation, User }) {
         const users = await User.find({ username: { $in: [...members] } });
         if (!(users.length > 1)) return { success: false, message: "User or Users does not exist!" }
 
-        const userArrToIdArr = users.map(user => user.id)
+        const userArrToIdArr = users.map(user => user._id)
 
-        const isAlreadyConverstion = await Conversation.findOne({ members: { $in: [...userArrToIdArr] } })
+        const isAlreadyConverstion = await Conversation.findOne({ members: [...userArrToIdArr] })
         if (isAlreadyConverstion) return { success: false, message: "Conversation already exist!" }
 
-        const newConversation = new Conversation({ name, members, isGroup })
+        const newConversation = new Conversation({ name, members: userArrToIdArr, isGroup })
         await newConversation.save()
 
         return {
             success: true,
-            message: 'Conversation has been created!',
-            conversation: {
-                ...newConversation, members: newConversation.members.map(async (id) => {
-                    return await User.findById(id)
-                })
-            }
+            message: "Conversation has been created!",
+            conversation: newConversation
         }
 
     } catch (err) {
