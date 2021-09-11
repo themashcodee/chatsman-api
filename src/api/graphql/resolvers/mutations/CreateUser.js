@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt')
-const createUserSecret = require('../../../helpers/createUserSecret')
+const randomSecret = require('../../../helpers/randomSecret')
 const sendEmail = require('../../../../config/emailSender')
 
 async function CreateUser({ args, User }) {
@@ -11,7 +11,7 @@ async function CreateUser({ args, User }) {
         if (isUserAlreadyExist) return ({ success: false, message: 'Email or Username already exist!' })
 
         // CREATING USER IN MANGO DB
-        const secret = createUserSecret()
+        const secret = randomSecret()
         const hashedPassword = await bcrypt.hash(password, 10)
         const newUser = new User({ name, email, password: hashedPassword, username, secret })
         await newUser.save()

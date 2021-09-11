@@ -7,7 +7,7 @@ async function sendEmail({ email, name, secret }) {
         const msg = {
             to: email,
             from: 'app.chatsman@gmail.com',
-            subject: "Verify your account on Chatsman",
+            subject: "Secret code for Chatsman",
             text: `Hey ${name}, here is your secret code that is required for any type of account modification ${secret}`,
             html: emailHtml({ name, secret }),
         }
