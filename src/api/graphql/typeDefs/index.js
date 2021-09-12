@@ -38,7 +38,7 @@ const typeDefs = gql`
         resetSecretCode(id:ID!):ResetSecretCodeResponseType!
         changePassword(oldPassword:String!,newPassword:String!,id:ID!):ChangePasswordResponseType!
         changeBasicDetails(name:String,username:String,id:ID!):ChangeBasicDetailsResponseType!
-        logout(secret:Int!,id:ID!):LogoutResponseType!
+        logout(id:ID!):LogoutResponseType!
         deleteAccount(secret:Int!,id:ID!):DeleteAccountReponseType!
         createConversation(name:String,members:[String!]!,isGroup:Boolean!,image:String):CreateConversationResponseType!
         loginUser(email:String!,password:String!,secret:Int!): LoginUserResponseType!
