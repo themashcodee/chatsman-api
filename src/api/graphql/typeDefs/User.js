@@ -1,7 +1,7 @@
 
 const UserType =
     `type User{
-        id:ID!
+        _id:ID!
         secret:Int!
         name:String!
         username:String!
