@@ -4,7 +4,7 @@ async function DeleteAccount({ args, User, res, Conversation }) {
 
         const isUser = await User.findById(id)
         if (!isUser) return { success: false, message: "User does not exist!" }
-        if (isUser.secret !== secret) return { success: false, message: "Wrong Secret!" }
+        if (isUser.secret !== secret) return { success: false, message: "Wrong Secret Code!" }
 
         await User.deleteOne({ secret, _id: id })
 

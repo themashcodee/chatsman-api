@@ -47,4 +47,26 @@ const DeleteAccountReponseType =
     }
     `
 
-module.exports = { DeleteAccountReponseType, LogoutResponseType, GetUserResponseType, GetConversationsResponseType, CreateConversationResponseType, LoginUserResponseType, CreateUserResponseType }
+const ChangeBasicDetailsResponseType =
+    `type ChangeBasicDetailsResponseType implements ResponseType{
+        success:Boolean!
+        message:String!
+    }
+    `
+
+const ChangePasswordResponseType =
+    `type ChangePasswordResponseType implements ResponseType{
+        success:Boolean!
+        message:String!
+    }
+    `
+
+const ResetSecretCodeResponseType =
+    `type ResetSecretCodeResponseType implements ResponseType{
+        success:Boolean!
+        message:String!
+    }
+    `
+
+
+module.exports = { ResetSecretCodeResponseType, ChangePasswordResponseType, ChangeBasicDetailsResponseType, DeleteAccountReponseType, LogoutResponseType, GetUserResponseType, GetConversationsResponseType, CreateConversationResponseType, LoginUserResponseType, CreateUserResponseType }

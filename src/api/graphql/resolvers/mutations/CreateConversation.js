@@ -3,7 +3,7 @@ async function CreateConversation({ args, Conversation, User }) {
         const { name, members, isGroup } = args
 
         const users = await User.find({ username: { $in: [...members] } });
-        if (!(users.length > 1)) return { success: false, message: "User or Users does not exist!" }
+        if (!(users.length > 1)) return { success: false, message: "User does not exist!" }
 
         const userArrToIdArr = users.map(user => user._id)
 

@@ -16,11 +16,11 @@ async function CreateUser({ args, User }) {
         const newUser = new User({ name, email, password: hashedPassword, username, secret })
         await newUser.save()
 
-        sendEmail({ email, name, secret })
+        await sendEmail({ email, name, secret })
 
         return {
             success: true,
-            message: 'An Secret key has been sent to your email (check spam folder)'
+            message: 'An Secret Code has been sent to your email (check spam folder if not found)'
         }
     } catch (err) {
         return {
