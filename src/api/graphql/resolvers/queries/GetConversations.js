@@ -16,7 +16,6 @@ function GetConversations({ token, User, Conversation }) {
                 conversations
             }
         } catch (err) {
-            console.log(err)
             return {
                 success: false,
                 message: 'There is some server error, try again later'

@@ -12,7 +12,6 @@ async function GetUser({ args, User }) {
             user: isUserExist
         }
     } catch (err) {
-        console.log(err)
         return {
             success: false,
             message: 'There is some server error, try again later'

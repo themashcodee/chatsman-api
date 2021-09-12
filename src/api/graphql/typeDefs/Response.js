@@ -40,4 +40,11 @@ const LogoutResponseType =
     }
     `
 
-module.exports = { LogoutResponseType, GetUserResponseType, GetConversationsResponseType, CreateConversationResponseType, LoginUserResponseType, CreateUserResponseType }
+const DeleteAccountReponseType =
+    `type DeleteAccountReponseType implements ResponseType{
+        success:Boolean!
+        message:String!
+    }
+    `
+
+module.exports = { DeleteAccountReponseType, LogoutResponseType, GetUserResponseType, GetConversationsResponseType, CreateConversationResponseType, LoginUserResponseType, CreateUserResponseType }

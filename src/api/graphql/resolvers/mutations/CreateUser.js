@@ -23,10 +23,9 @@ async function CreateUser({ args, User }) {
             message: 'An Secret key has been sent to your email (check spam folder)'
         }
     } catch (err) {
-        console.log(err)
         return {
             success: false,
-            message: 'There is some server error, try again later'
+            message: 'There is some server error, try again later.'
         }
     }
 }
