@@ -8,6 +8,7 @@ const DeleteAccount = require('./mutations/DeleteAccount')
 const ChangeBasicDetails = require('./mutations/ChangeBasicDetails')
 const ChangePassword = require('./mutations/ChangePassword')
 const ResetSecretCode = require('./mutations/ResetSecretCode')
+const ResetPassword = require('./mutations/ResetPassword')
 
 const resolvers = {
     Query: {
@@ -16,6 +17,7 @@ const resolvers = {
         getConversations: (_, ___, { User, token, Conversation }, __) => GetConversations({ token, User, Conversation })
     },
     Mutation: {
+        resetPassword: async (_, args, { User }, __) => await ResetPassword({ args, User }),
         resetSecretCode: async (_, args, { User }, __) => await ResetSecretCode({ args, User }),
         changePassword: async (_, args, { User }, __) => await ChangePassword({ args, User }),
         changeBasicDetails: async (_, args, { User }, __) => await ChangeBasicDetails({ args, User }),

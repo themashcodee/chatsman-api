@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt')
 const randomSecret = require('../../../helpers/randomSecret')
-const sendEmail = require('../../../../config/emailSender')
+const { sendSecretCode } = require('../../../../config/emailSender')
 
 async function CreateUser({ args, User }) {
     try {
@@ -16,11 +16,11 @@ async function CreateUser({ args, User }) {
         const newUser = new User({ name, email, password: hashedPassword, username, secret })
         await newUser.save()
 
-        await sendEmail({ email, name, secret })
+        await sendSecretCode({ email, name, secret })
 
         return {
             success: true,
-            message: 'An Secret Code has been sent to your email (check spam folder if not found)'
+            message: 'A Secret Code has been sent to your email (check spam folder if not found)'
         }
     } catch (err) {
         return {
