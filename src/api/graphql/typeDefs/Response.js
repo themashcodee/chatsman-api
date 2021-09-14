@@ -67,7 +67,6 @@ const ResetSecretCodeResponseType =
         message:String!
     }
     `
-
 const ResetPasswordResponseType =
     `type ResetPasswordResponseType implements ResponseType{
         success:Boolean!

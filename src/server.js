@@ -8,6 +8,7 @@ const cookieParser = require('cookie-parser')
 require('dotenv').config()
 
 const refreshTokenRoute = require('./api/routes/refreshToken')
+const profileimageupload = require('./api/routes/profileImageUpload')
 
 const typeDefs = require('./api/graphql/typeDefs/index');
 const resolvers = require('./api/graphql/resolvers/index');
@@ -26,8 +27,16 @@ async function startApolloServer() {
         await server.start();
         server.applyMiddleware({ app, cors: corsOption });
 
-        app.use(cors(corsOption), express.json(), express.urlencoded({ extended: true }), cookieParser())
+
+        app.use(
+            cors(corsOption),
+            express.json(),
+            express.urlencoded({ extended: true }),
+            cookieParser(),
+            express.static('./public')
+        )
         refreshTokenRoute(app)
+        profileimageupload(app)
 
         await mongoose.connect(process.env.MANGO_DB_URI)
 

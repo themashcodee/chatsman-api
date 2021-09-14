@@ -11,6 +11,7 @@ const typeDefs = gql`
         success:Boolean!
         message:String!
     }
+    scalar Upload
 
     ${UserType}
     ${ConversationType}
