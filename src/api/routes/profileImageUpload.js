@@ -10,7 +10,7 @@ function profileimageupload(app) {
 
             const isUser = await User.findById(userId)
             if (!isUser) return res.json({ success: false, message: "User does not exist" })
-            const url = `https://chatsmanapi.herokuapp.com/images/${filename}`
+            const url = `https://chatsmanapi.herokuapp.com/${filename}`
 
             if (!!isUser.image) {
                 const alreadyExistImageName = url.substring(41)
