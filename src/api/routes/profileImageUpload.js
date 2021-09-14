@@ -13,7 +13,7 @@ function profileimageupload(app) {
             const url = `https://chatsmanapi.herokuapp.com/${filename}`
 
             if (!!isUser.image) {
-                const alreadyExistImageName = url.substring(41)
+                const alreadyExistImageName = url.substring(34)
                 fs.unlinkSync(`./src/images/${alreadyExistImageName}`)
             }
 
