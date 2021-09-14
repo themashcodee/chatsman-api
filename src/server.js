@@ -33,7 +33,7 @@ async function startApolloServer() {
             express.json(),
             express.urlencoded({ extended: true }),
             cookieParser(),
-            express.static('./public')
+            express.static('./src/images')
         )
         refreshTokenRoute(app)
         profileimageupload(app)

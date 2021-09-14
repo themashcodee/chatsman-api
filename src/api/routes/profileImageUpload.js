@@ -14,7 +14,7 @@ function profileimageupload(app) {
 
             if (!!isUser.image) {
                 const alreadyExistImageName = url.substring(41)
-                fs.unlinkSync(`./public/images/${alreadyExistImageName}`)
+                fs.unlinkSync(`./src/images/${alreadyExistImageName}`)
             }
 
             isUser.image = url
