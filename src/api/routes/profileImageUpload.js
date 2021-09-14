@@ -1,5 +1,6 @@
 const uploadImage = require('../middlewares/multer')
 const User = require('../mongodb/models/User')
+const fs = require('fs')
 
 function profileimageupload(app) {
     app.post('/profileimageupload', uploadImage.single('image'), async (req, res) => {
@@ -10,6 +11,11 @@ function profileimageupload(app) {
             const isUser = await User.findById(userId)
             if (!isUser) return res.json({ success: false, message: "User does not exist" })
             const url = `https://chatsmanapi.herokuapp.com/images/${filename}`
+
+            if (!!isUser.image) {
+                const alreadyExistImageName = isUser.image.substring(41)
+                fs.unlinkSync(`./public/images/${alreadyExistImageName}`)
+            }
 
             isUser.image = url
             await isUser.save()
