@@ -13,7 +13,7 @@ function profileimageupload(app) {
             const url = `https://chatsmanapi.herokuapp.com/images/${filename}`
 
             if (!!isUser.image) {
-                const alreadyExistImageName = isUser.image.substring(41)
+                const alreadyExistImageName = url.substring(41)
                 fs.unlinkSync(`./public/images/${alreadyExistImageName}`)
             }
 
@@ -22,7 +22,6 @@ function profileimageupload(app) {
 
             res.json({ success: true, message: "Profile Picture changed." })
         } catch (err) {
-            console.log(err)
             res.json({ success: false, message: "There is some server error, try again later." })
         }
     })
