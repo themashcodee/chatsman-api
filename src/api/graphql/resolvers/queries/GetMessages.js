@@ -1,8 +1,8 @@
 const GetMessages = async ({ args, Message }) => {
     try {
-        const { conversationId, senderId } = args
+        const { conversationId } = args
 
-        const messages = await Message.find({ conversationId, senderId })
+        const messages = await Message.find({ conversationId })
 
         return { success: true, message: "Here are the messages", messages }
     } catch (err) {

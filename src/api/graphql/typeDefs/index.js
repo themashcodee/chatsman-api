@@ -37,7 +37,7 @@ const typeDefs = gql`
         health: String!
         getUser(username:String,id:String):GetUserResponseType!
         getConversations:GetConversationsResponseType!
-        getMessages(conversationId:ID!,senderId:ID!):GetMessagesResponseType!
+        getMessages(conversationId:ID!):GetMessagesResponseType!
     }
     type Mutation{
         createMessage(senderId:ID!,type:MessageType!,content:String!,conversationId:ID!):CreateMessageResponseType!
