@@ -9,14 +9,18 @@ const ChangeBasicDetails = require('./mutations/ChangeBasicDetails')
 const ChangePassword = require('./mutations/ChangePassword')
 const ResetSecretCode = require('./mutations/ResetSecretCode')
 const ResetPassword = require('./mutations/ResetPassword')
+const CreateMessage = require('./mutations/CreateMessage')
+const GetMessages = require('./queries/GetMessages')
 
 const resolvers = {
     Query: {
         health: () => 'Pretty Good',
         getUser: async (_, args, { User }, __) => await GetUser({ args, User }),
-        getConversations: (_, ___, { User, token, Conversation }, __) => GetConversations({ token, User, Conversation })
+        getConversations: (_, ___, { User, token, Conversation }, __) => GetConversations({ token, User, Conversation }),
+        getMessages: async (_, args, { Message }, __) => await GetMessages({ args, Message })
     },
     Mutation: {
+        createMessage: async (_, args, { User, Conversation, Message }, __) => await CreateMessage({ args, User, Message, Conversation }),
         resetPassword: async (_, args, { User }, __) => await ResetPassword({ args, User }),
         resetSecretCode: async (_, args, { User }, __) => await ResetSecretCode({ args, User }),
         changePassword: async (_, args, { User }, __) => await ChangePassword({ args, User }),

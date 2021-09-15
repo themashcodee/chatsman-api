@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose')
 const User = require('./api/mongodb/models/User')
 const Conversation = require('./api/mongodb/models/Conversation')
+const Message = require('./api/mongodb/models/Message')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 require('dotenv').config()
@@ -20,7 +21,7 @@ async function startApolloServer() {
         const server = new ApolloServer({
             typeDefs,
             resolvers,
-            context: ({ req, res }) => ({ token: req.headers.authorization, res, User, Conversation }),
+            context: ({ req, res }) => ({ token: req.headers.authorization, res, User, Conversation, Message }),
             introspection: typeof window !== undefined,
         });
 

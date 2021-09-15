@@ -6,10 +6,10 @@ const MessageType =
     type Message{
         id:ID!
         conversationId:ID!
-        sender:User!
-        time:Int!
+        senderId:ID!
         type:MessageType!
         content:String!
+        createdAt:String!
     }`
 
 module.exports = MessageType

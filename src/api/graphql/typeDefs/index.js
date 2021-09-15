@@ -4,7 +4,7 @@ const ConversationType = require('./Conversation')
 const MessageType = require('./Message')
 
 const { CreateUserInputType } = require('./Input')
-const { ResetPasswordResponseType, ResetSecretCodeResponseType, LogoutResponseType, ChangePasswordResponseType, ChangeBasicDetailsResponseType, DeleteAccountReponseType, LoginUserResponseType, CreateUserResponseType, GetConversationsResponseType, CreateConversationResponseType, GetUserResponseType } = require('./Response')
+const { GetMessagesResponseType, CreateMessageResponseType, ResetPasswordResponseType, ResetSecretCodeResponseType, LogoutResponseType, ChangePasswordResponseType, ChangeBasicDetailsResponseType, DeleteAccountReponseType, LoginUserResponseType, CreateUserResponseType, GetConversationsResponseType, CreateConversationResponseType, GetUserResponseType } = require('./Response')
 
 const typeDefs = gql`
     interface ResponseType{
@@ -28,6 +28,8 @@ const typeDefs = gql`
     ${ChangePasswordResponseType}
     ${ResetSecretCodeResponseType}
     ${ResetPasswordResponseType}
+    ${CreateMessageResponseType}
+    ${GetMessagesResponseType}
 
     ${CreateUserInputType}
     
@@ -35,8 +37,10 @@ const typeDefs = gql`
         health: String!
         getUser(username:String,id:String):GetUserResponseType!
         getConversations:GetConversationsResponseType!
+        getMessages(conversationId:ID!,senderId:ID!):GetMessagesResponseType!
     }
     type Mutation{
+        createMessage(senderId:ID!,type:MessageType!,content:String!,conversationId:ID!):CreateMessageResponseType!
         resetPassword(secret:Int!,email:String!):ResetPasswordResponseType!
         resetSecretCode(email:String!):ResetSecretCodeResponseType!
         changePassword(oldPassword:String!,newPassword:String!,id:ID!):ChangePasswordResponseType!

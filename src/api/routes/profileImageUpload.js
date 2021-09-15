@@ -2,9 +2,13 @@ const uploadImage = require('../middlewares/multer')
 const User = require('../mongodb/models/User')
 const fs = require('fs')
 
+// MIDDLEWARE
+// uploadImage.single('image'),
+
 function profileimageupload(app) {
-    app.post('/profileimageupload', uploadImage.single('image'), async (req, res) => {
+    app.post('/profileimageupload', async (req, res) => {
         try {
+            return res.json({ success: true, message: "This feature is not available yet" })
             const { filename } = req.file
             const userId = req.body.id
 

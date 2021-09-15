@@ -10,6 +10,7 @@ const schema = mongoose.Schema({
     username: {
         type: String,
         max: 10,
+        unique: true,
         min: 3,
         required: true
     },
