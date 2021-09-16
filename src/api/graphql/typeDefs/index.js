@@ -39,6 +39,9 @@ const typeDefs = gql`
         getConversations:GetConversationsResponseType!
         getMessages(conversationId:ID!):GetMessagesResponseType!
     }
+    type Subscription{
+        messageAdded(conversationId:ID!):GetMessagesResponseType!
+    }
     type Mutation{
         createMessage(senderId:ID!,type:MessageType!,content:String!,conversationId:ID!):CreateMessageResponseType!
         resetPassword(secret:Int!,email:String!):ResetPasswordResponseType!

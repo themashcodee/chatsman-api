@@ -15,19 +15,48 @@ const typeDefs = require('./api/graphql/typeDefs/index');
 const resolvers = require('./api/graphql/resolvers/index');
 const corsOption = require('./config/cors')
 
+// 
+const { createServer } = require('http');
+const { execute, subscribe } = require('graphql');
+const { SubscriptionServer } = require('subscriptions-transport-ws');
+const { makeExecutableSchema } = require('@graphql-tools/schema');
+const pubsub = require('./config/pubsub')
+
+
 async function startApolloServer() {
     try {
         const app = express();
+
+        const httpServer = createServer(app);
+        const schema = makeExecutableSchema({ typeDefs, resolvers });
+
         const server = new ApolloServer({
-            typeDefs,
-            resolvers,
-            context: ({ req, res }) => ({ token: req.headers.authorization, res, User, Conversation, Message }),
+            schema,
+            context: ({ req, res }) => ({ token: req.headers.authorization, res, User, pubsub, Conversation, Message }),
             introspection: typeof window !== undefined,
+            plugins: [{
+                async serverWillStart() {
+                    return {
+                        async drainServer() {
+                            subscriptionServer.close();
+                        }
+                    };
+                }
+            }],
         });
+
+        const subscriptionServer = SubscriptionServer.create({
+            schema,
+            execute,
+            subscribe,
+        }, {
+            server: httpServer,
+            path: server.graphqlPath,
+        });
+
 
         await server.start();
         server.applyMiddleware({ app, cors: corsOption });
-
 
         app.use(
             cors(corsOption),
@@ -41,7 +70,7 @@ async function startApolloServer() {
 
         await mongoose.connect(process.env.MANGO_DB_URI)
 
-        app.listen(process.env.PORT || 4000, () => console.log(`🚀 http://localhost:4000${server.graphqlPath}`));
+        httpServer.listen(process.env.PORT || 4000, () => console.log(`🚀 http://localhost:4000${server.graphqlPath}`));
     } catch (err) {
         console.log(err)
     }

@@ -1,4 +1,5 @@
-const CreateMessage = async ({ args, Message, Conversation, User }) => {
+
+const CreateMessage = async ({ args, pubsub, Message, Conversation }) => {
     try {
         const { senderId, type, content, conversationId } = args
 
@@ -9,6 +10,10 @@ const CreateMessage = async ({ args, Message, Conversation, User }) => {
 
         const newMessage = new Message({ conversationId, senderId, type, content })
         await newMessage.save()
+
+        const messages = await Message.find({ conversationId })
+
+        pubsub.publish(conversationId, { messageAdded: { success: true, message: "here is the result", messages } });
 
         return { success: true, message: "Message Sent" }
     } catch (err) {
