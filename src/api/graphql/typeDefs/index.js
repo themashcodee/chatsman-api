@@ -37,7 +37,7 @@ const typeDefs = gql`
         health: String!
         getUser(username:String,id:String):GetUserResponseType!
         getConversations:GetConversationsResponseType!
-        getMessages(conversationId:ID!):GetMessagesResponseType!
+        getMessages(conversationId:ID!,isFull:Boolean):GetMessagesResponseType!
     }
     type Subscription{
         messageAdded(conversationId:ID!):GetMessagesResponseType!
