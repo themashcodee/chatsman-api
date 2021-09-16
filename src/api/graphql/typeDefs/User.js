@@ -8,6 +8,7 @@ const UserType =
         email:String!
         password:String!
         image:String
+        description:String
     }`;
 
 module.exports = UserType
