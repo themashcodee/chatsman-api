@@ -9,6 +9,7 @@ const UserType =
         password:String!
         image:String
         description:String
+        createdAt:String
     }`;
 
 module.exports = UserType

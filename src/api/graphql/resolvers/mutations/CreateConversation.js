@@ -1,4 +1,4 @@
-async function CreateConversation({ args, Conversation, User }) {
+async function CreateConversation({ args, pubsub, Conversation, User }) {
     try {
         const { name, members, isGroup } = args
 
@@ -12,6 +12,12 @@ async function CreateConversation({ args, Conversation, User }) {
 
         const newConversation = new Conversation({ name, members: userArrToIdArr, isGroup })
         await newConversation.save()
+
+
+        userArrToIdArr.forEach(async (id) => {
+            const conversations = await Conversation.find({ members: { $in: [id] } }).sort({ updatedAt: -1 })
+            pubsub.publish(id, { conversationAdded: { success: true, message: "here is the result", conversations } });
+        })
 
         return {
             success: true,

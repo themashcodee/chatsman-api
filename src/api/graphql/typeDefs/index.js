@@ -4,7 +4,7 @@ const ConversationType = require('./Conversation')
 const MessageType = require('./Message')
 
 const { CreateUserInputType } = require('./Input')
-const { GetMessagesResponseType, CreateMessageResponseType, ResetPasswordResponseType, ResetSecretCodeResponseType, LogoutResponseType, ChangePasswordResponseType, ChangeBasicDetailsResponseType, DeleteAccountReponseType, LoginUserResponseType, CreateUserResponseType, GetConversationsResponseType, CreateConversationResponseType, GetUserResponseType } = require('./Response')
+const { DeleteMessageResponseType, DeleteConversationReponseType, GetMessagesResponseType, CreateMessageResponseType, ResetPasswordResponseType, ResetSecretCodeResponseType, LogoutResponseType, ChangePasswordResponseType, ChangeBasicDetailsResponseType, DeleteAccountReponseType, LoginUserResponseType, CreateUserResponseType, GetConversationsResponseType, CreateConversationResponseType, GetUserResponseType } = require('./Response')
 
 const typeDefs = gql`
     interface ResponseType{
@@ -30,19 +30,24 @@ const typeDefs = gql`
     ${ResetPasswordResponseType}
     ${CreateMessageResponseType}
     ${GetMessagesResponseType}
+    ${DeleteConversationReponseType}
+    ${DeleteMessageResponseType}
 
     ${CreateUserInputType}
     
     type Query{
         health: String!
         getUser(username:String,id:String):GetUserResponseType!
-        getConversations:GetConversationsResponseType!
+        getConversations(id:ID!):GetConversationsResponseType!
         getMessages(conversationId:ID!,isFull:Boolean):GetMessagesResponseType!
     }
     type Subscription{
+        conversationAdded(id:ID!):GetConversationsResponseType!
         messageAdded(conversationId:ID!):GetMessagesResponseType!
     }
     type Mutation{
+        deleteMessage(id:ID!,senderId:ID!,conversationId:ID!):DeleteMessageResponseType!
+        deleteConversation(conversationId:ID!):DeleteConversationReponseType!
         createMessage(senderId:ID!,type:MessageType!,content:String!,conversationId:ID!):CreateMessageResponseType!
         resetPassword(secret:Int!,email:String!):ResetPasswordResponseType!
         resetSecretCode(email:String!):ResetSecretCodeResponseType!

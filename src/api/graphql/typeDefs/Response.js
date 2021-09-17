@@ -81,6 +81,20 @@ const CreateMessageResponseType =
     }
     `
 
+const DeleteConversationReponseType =
+    `type DeleteConversationReponseType implements ResponseType{
+        success:Boolean!
+        message:String!
+    }
+    `
+
+const DeleteMessageResponseType =
+    `type DeleteMessageResponseType implements ResponseType{
+        success:Boolean!
+        message:String!
+    }
+    `
+
 const GetMessagesResponseType =
     `type GetMessagesResponseType implements ResponseType{
         success:Boolean!
@@ -90,4 +104,4 @@ const GetMessagesResponseType =
     `
 
 
-module.exports = { GetMessagesResponseType, CreateMessageResponseType, ResetPasswordResponseType, ResetSecretCodeResponseType, ChangePasswordResponseType, ChangeBasicDetailsResponseType, DeleteAccountReponseType, LogoutResponseType, GetUserResponseType, GetConversationsResponseType, CreateConversationResponseType, LoginUserResponseType, CreateUserResponseType }
+module.exports = { DeleteMessageResponseType, GetMessagesResponseType, DeleteConversationReponseType, CreateMessageResponseType, ResetPasswordResponseType, ResetSecretCodeResponseType, ChangePasswordResponseType, ChangeBasicDetailsResponseType, DeleteAccountReponseType, LogoutResponseType, GetUserResponseType, GetConversationsResponseType, CreateConversationResponseType, LoginUserResponseType, CreateUserResponseType }
