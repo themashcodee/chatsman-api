@@ -1,4 +1,4 @@
-async function DeleteAccount({ args, User, res, Conversation }) {
+async function DeleteAccount({ args, User, res, Conversation, Message }) {
     try {
         const { secret, id } = args
 
@@ -7,6 +7,11 @@ async function DeleteAccount({ args, User, res, Conversation }) {
         if (isUser.secret !== secret) return { success: false, message: "Wrong Secret Code!" }
 
         await User.deleteOne({ secret, _id: id })
+
+        const conversations = await Conversation.find({ members: { $in: [id] } })
+        conversations.forEach(async (conversation) => {
+            await Message.deleteMany({ conversationId: conversation._id })
+        })
 
         await Conversation.deleteMany({ members: { $in: [id] } })
 
