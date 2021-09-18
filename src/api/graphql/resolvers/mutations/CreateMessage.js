@@ -14,6 +14,7 @@ const CreateMessage = async ({ args, pubsub, Message, Conversation }) => {
         const messages = await Message.find({ conversationId }).sort({ createdAt: -1 }).limit(50)
 
         pubsub.publish(conversationId, { messageAdded: { success: true, message: "here is the result", messages: messages.reverse() } });
+        pubsub.publish(`${conversationId}LM`, { lastMessageAdded: { success: true, message: "This is last message", messages: messages[messages.length - 1] } });
 
         return { success: true, message: "Message Sent" }
     } catch (err) {

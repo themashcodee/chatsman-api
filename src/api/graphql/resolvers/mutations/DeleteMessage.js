@@ -8,6 +8,7 @@ const DeleteMessage = async ({ args, pubsub, Message }) => {
 
         const messages = await Message.find({ conversationId }).sort({ createdAt: -1 }).limit(50)
         pubsub.publish(conversationId, { messageAdded: { success: true, message: "here is the result", messages: messages.reverse() } });
+        pubsub.publish(`${conversationId}LM`, { lastMessageAdded: { success: true, message: "This is last message", messages: messages[messages.length - 1] } });
 
         return { success: true, message: "Message deleted successfully!" }
     } catch (err) {

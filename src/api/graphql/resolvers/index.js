@@ -12,21 +12,26 @@ const ResetPassword = require('./mutations/ResetPassword')
 const CreateMessage = require('./mutations/CreateMessage')
 const GetMessages = require('./queries/GetMessages')
 const DeleteConversation = require('./mutations/DeleteConversation')
+const DeleteMessage = require('./mutations/DeleteMessage')
+const GetLastMessage = require('./queries/GetLastMessage')
 
 const MessageAdded = require('./subscription/MessageAdded')
 const ConversationAdded = require('./subscription/ConversationAdded')
-const DeleteMessage = require('./mutations/DeleteMessage')
+const LastMessageAdded = require('./subscription/LastMessageAdded')
+
 
 const resolvers = {
     Query: {
         health: () => 'Pretty Good!',
         getUser: async (_, args, { User }, __) => await GetUser({ args, User }),
         getConversations: async (_, args, { User, Conversation }) => await GetConversations({ args, User, Conversation }),
-        getMessages: async (_, args, { Message }) => await GetMessages({ args, Message })
+        getMessages: async (_, args, { Message }) => await GetMessages({ args, Message }),
+        getLastMessage: async (_, args, { Message }) => await GetLastMessage({ args, Message }),
     },
     Subscription: {
         messageAdded: { subscribe: async (_, { conversationId }) => await MessageAdded({ conversationId }) },
         conversationAdded: { subscribe: async (_, { id }) => await ConversationAdded({ id }) },
+        lastMessageAdded: { subscribe: async (_, { conversationId }) => await LastMessageAdded({ conversationId }) },
     },
     Mutation: {
         deleteMessage: async (_, args, { pubsub, Message }) => await DeleteMessage({ pubsub, args, Message }),

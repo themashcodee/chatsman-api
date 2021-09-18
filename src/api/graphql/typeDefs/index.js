@@ -4,7 +4,7 @@ const ConversationType = require('./Conversation')
 const MessageType = require('./Message')
 
 const { CreateUserInputType } = require('./Input')
-const { DeleteMessageResponseType, DeleteConversationReponseType, GetMessagesResponseType, CreateMessageResponseType, ResetPasswordResponseType, ResetSecretCodeResponseType, LogoutResponseType, ChangePasswordResponseType, ChangeBasicDetailsResponseType, DeleteAccountReponseType, LoginUserResponseType, CreateUserResponseType, GetConversationsResponseType, CreateConversationResponseType, GetUserResponseType } = require('./Response')
+const { GetLastMessageResponseType, DeleteMessageResponseType, DeleteConversationReponseType, GetMessagesResponseType, CreateMessageResponseType, ResetPasswordResponseType, ResetSecretCodeResponseType, LogoutResponseType, ChangePasswordResponseType, ChangeBasicDetailsResponseType, DeleteAccountReponseType, LoginUserResponseType, CreateUserResponseType, GetConversationsResponseType, CreateConversationResponseType, GetUserResponseType } = require('./Response')
 
 const typeDefs = gql`
     interface ResponseType{
@@ -32,6 +32,7 @@ const typeDefs = gql`
     ${GetMessagesResponseType}
     ${DeleteConversationReponseType}
     ${DeleteMessageResponseType}
+    ${GetLastMessageResponseType}
 
     ${CreateUserInputType}
     
@@ -40,10 +41,12 @@ const typeDefs = gql`
         getUser(username:String,id:String):GetUserResponseType!
         getConversations(id:ID!):GetConversationsResponseType!
         getMessages(conversationId:ID!,isFull:Boolean):GetMessagesResponseType!
+        getLastMessage(conversationId:ID!):GetLastMessageResponseType!
     }
     type Subscription{
         conversationAdded(id:ID!):GetConversationsResponseType!
         messageAdded(conversationId:ID!):GetMessagesResponseType!
+        lastMessageAdded(conversationId:ID!):GetLastMessageResponseType!
     }
     type Mutation{
         deleteMessage(id:ID!,senderId:ID!,conversationId:ID!):DeleteMessageResponseType!
