@@ -1,115 +1,38 @@
-const LoginUserResponseType =
-    `type LoginUserResponseType implements ResponseType {
+const LoginUser =
+    `type LoginUser implements Response {
         success:Boolean!
         message:String!
         user: User
         token: String
     }`
-
-const CreateUserResponseType =
-    `type CreateUserResponseType implements ResponseType{
+const GetUser =
+    `type GetUser implements Response{
         success:Boolean!
         message:String!
+        user:User 
     }`
-
-const CreateConversationResponseType =
-    `type CreateConversationResponseType implements ResponseType{
-        success:Boolean!
-        message:String!
-        conversation:Conversation
-    }`
-
-const GetUserResponseType =
-    `type GetUserResponseType implements ResponseType{
-        success:Boolean!
-        message:String!
-        user:User
-    }`
-
-const GetConversationsResponseType =
-    `type GetConversationsResponseType implements ResponseType{
+const GetConversations =
+    `type GetConversations implements Response{
         success:Boolean!
         message:String!
         conversations:[Conversation]
     }`
-
-const LogoutResponseType =
-    `type LogoutResponseType implements ResponseType{
-        success:Boolean!
-        message:String!
-    }
-    `
-
-const DeleteAccountReponseType =
-    `type DeleteAccountReponseType implements ResponseType{
-        success:Boolean!
-        message:String!
-    }
-    `
-
-const ChangeBasicDetailsResponseType =
-    `type ChangeBasicDetailsResponseType implements ResponseType{
-        success:Boolean!
-        message:String!
-    }
-    `
-
-const ChangePasswordResponseType =
-    `type ChangePasswordResponseType implements ResponseType{
-        success:Boolean!
-        message:String!
-    }
-    `
-
-const ResetSecretCodeResponseType =
-    `type ResetSecretCodeResponseType implements ResponseType{
-        success:Boolean!
-        message:String!
-    }
-    `
-const ResetPasswordResponseType =
-    `type ResetPasswordResponseType implements ResponseType{
-        success:Boolean!
-        message:String!
-    }
-    `
-
-const CreateMessageResponseType =
-    `type CreateMessageResponseType implements ResponseType{
-        success:Boolean!
-        message:String!
-    }
-    `
-
-const DeleteConversationReponseType =
-    `type DeleteConversationReponseType implements ResponseType{
-        success:Boolean!
-        message:String!
-    }
-    `
-
-const DeleteMessageResponseType =
-    `type DeleteMessageResponseType implements ResponseType{
-        success:Boolean!
-        message:String!
-    }
-    `
-
-const GetMessagesResponseType =
-    `type GetMessagesResponseType implements ResponseType{
+const GetMessages =
+    `type GetMessages implements Response{
         success:Boolean!
         message:String!
         messages:[Message]
-    }
-    `
-
-const GetLastMessageResponseType =
-    `type GetLastMessageResponseType implements ResponseType{
+    }`
+const GetLastMessage =
+    `type GetLastMessage implements Response{
         success:Boolean!
         message:String!
         messages:Message
-    }
-    `
+    }`
+const BaseResponse =
+    `type BaseResponse {
+        success: Boolean!
+        message: String!
+    }`
 
-
-module.exports = { GetLastMessageResponseType, DeleteMessageResponseType, GetMessagesResponseType, DeleteConversationReponseType, CreateMessageResponseType, ResetPasswordResponseType, ResetSecretCodeResponseType, ChangePasswordResponseType, ChangeBasicDetailsResponseType, DeleteAccountReponseType, LogoutResponseType, GetUserResponseType, GetConversationsResponseType, CreateConversationResponseType, LoginUserResponseType, CreateUserResponseType }
+module.exports = { BaseResponse, GetLastMessage, GetMessages, GetUser, GetConversations, LoginUser }

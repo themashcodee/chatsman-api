@@ -1,13 +1,10 @@
 const { gql } = require("apollo-server-express");
-const UserType = require('./User')
-const ConversationType = require('./Conversation')
-const MessageType = require('./Message')
 
-const { CreateUserInputType } = require('./Input')
-const { GetLastMessageResponseType, DeleteMessageResponseType, DeleteConversationReponseType, GetMessagesResponseType, CreateMessageResponseType, ResetPasswordResponseType, ResetSecretCodeResponseType, LogoutResponseType, ChangePasswordResponseType, ChangeBasicDetailsResponseType, DeleteAccountReponseType, LoginUserResponseType, CreateUserResponseType, GetConversationsResponseType, CreateConversationResponseType, GetUserResponseType } = require('./Response')
+const { MessageType, UserType, ConversationType } = require('./types')
+const { BaseResponse, GetLastMessage, GetMessages, LoginUser, GetConversations, GetUser } = require('./Response')
 
 const typeDefs = gql`
-    interface ResponseType{
+    interface Response {
         success:Boolean!
         message:String!
     }
@@ -17,50 +14,41 @@ const typeDefs = gql`
     ${ConversationType}
     ${MessageType}
 
-    ${CreateUserResponseType}
-    ${LoginUserResponseType}
-    ${CreateConversationResponseType}
-    ${GetUserResponseType}
-    ${GetConversationsResponseType}
-    ${LogoutResponseType}
-    ${DeleteAccountReponseType}
-    ${ChangeBasicDetailsResponseType}
-    ${ChangePasswordResponseType}
-    ${ResetSecretCodeResponseType}
-    ${ResetPasswordResponseType}
-    ${CreateMessageResponseType}
-    ${GetMessagesResponseType}
-    ${DeleteConversationReponseType}
-    ${DeleteMessageResponseType}
-    ${GetLastMessageResponseType}
+    ${BaseResponse}
+    ${LoginUser}
+    ${GetUser}
+    ${GetConversations}
+    ${GetMessages}
+    ${GetLastMessage}
 
-    ${CreateUserInputType}
     
     type Query{
-        health: String!
-        getUser(username:String,id:String):GetUserResponseType!
-        getConversations(id:ID!):GetConversationsResponseType!
-        getMessages(conversationId:ID!,isFull:Boolean):GetMessagesResponseType!
-        getLastMessage(conversationId:ID!):GetLastMessageResponseType!
+        getUser(username:String,id:String):GetUser!
+        getConversations(id:ID!):GetConversations!
+        getMessages(conversationId:ID!,isFull:Boolean):GetMessages!
+        getLastMessage(conversationId:ID!):GetLastMessage!
     }
     type Subscription{
-        conversationAdded(id:ID!):GetConversationsResponseType!
-        messageAdded(conversationId:ID!):GetMessagesResponseType!
-        lastMessageAdded(conversationId:ID!):GetLastMessageResponseType!
+        conversationAdded(id:ID!):GetConversations!
+        messageAdded(conversationId:ID!):GetMessages!
+        lastMessageAdded(conversationId:ID!):GetLastMessage!
     }
     type Mutation{
-        deleteMessage(id:ID!,senderId:ID!,conversationId:ID!):DeleteMessageResponseType!
-        deleteConversation(conversationId:ID!):DeleteConversationReponseType!
-        createMessage(senderId:ID!,type:MessageType!,content:String!,conversationId:ID!):CreateMessageResponseType!
-        resetPassword(secret:Int!,email:String!):ResetPasswordResponseType!
-        resetSecretCode(email:String!):ResetSecretCodeResponseType!
-        changePassword(oldPassword:String!,newPassword:String!,id:ID!):ChangePasswordResponseType!
-        changeBasicDetails(name:String,username:String,id:ID!,description:String):ChangeBasicDetailsResponseType!
-        logout(id:ID!):LogoutResponseType!
-        deleteAccount(secret:Int!,id:ID!):DeleteAccountReponseType!
-        createConversation(name:String,members:[String!]!,isGroup:Boolean!,image:String):CreateConversationResponseType!
-        loginUser(email:String!,password:String!,secret:Int!): LoginUserResponseType!
-        createUser(payload:CreateUserInputType!): CreateUserResponseType!
+        deleteProfileImage(id:ID!):BaseResponse!
+        deleteMessage(id:ID!,senderId:ID!,conversationId:ID!):BaseResponse!
+        deleteConversation(conversationId:ID!):BaseResponse!
+        deleteAccount(secret:Int!,id:ID!):BaseResponse!
+        
+        resetPassword(secret:Int!,email:String!):BaseResponse!
+        resetSecretCode(email:String!):BaseResponse!
+        changePassword(oldPassword:String!,newPassword:String!,id:ID!):BaseResponse!
+        changeDetails(id:ID!,name:String,username:String,description:String):BaseResponse!
+        logout(id:ID!):BaseResponse!
+        loginUser(email:String!,password:String!,secret:Int!):LoginUser!
+        
+        createConversation(members:[String!]!):BaseResponse!
+        createMessage(senderId:ID!,content:String!,conversationId:ID!):BaseResponse!
+        createUser(name:String!,email:String!,username:String!,password:String!):BaseResponse!
     }
 `;
 

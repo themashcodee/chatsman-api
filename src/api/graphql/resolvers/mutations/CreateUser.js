@@ -4,13 +4,11 @@ const { sendSecretCode } = require('../../../../config/emailSender')
 
 async function CreateUser({ args, User }) {
     try {
-        const { name, email, password, username } = args.payload
+        const { name, email, password, username } = args
 
-        // CHECK IF USER ALREADY EXIST
         const isUserAlreadyExist = await User.findOne({ $or: [{ email }, { username }] })
         if (isUserAlreadyExist) return ({ success: false, message: 'Email or Username already exist!' })
 
-        // CREATING USER IN MANGO DB
         const secret = randomSecret()
         const hashedPassword = await bcrypt.hash(password, 10)
         const newUser = new User({ name, email, password: hashedPassword, username, secret })
@@ -18,15 +16,9 @@ async function CreateUser({ args, User }) {
 
         await sendSecretCode({ email, name, secret })
 
-        return {
-            success: true,
-            message: 'A Secret Code has been sent to your email (check spam folder if not found)'
-        }
+        return { success: true, message: 'A Secret Code has sent to your email.' }
     } catch (err) {
-        return {
-            success: false,
-            message: 'There is some server error, try again later.'
-        }
+        return { success: false, message: 'There is some server error, try again later.' }
     }
 }
 

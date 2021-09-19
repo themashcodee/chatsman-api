@@ -1,20 +1,11 @@
 const mongoose = require('mongoose')
 
 const schema = mongoose.Schema({
-    name: {
-        type: String,
-        min: 3,
-        max: 20,
-    },
     members: {
         required: true,
         type: [String]
     },
-    isGroup: {
-        required: true,
-        type: Boolean
-    },
-    image: {
+    background: {
         type: String
     }
 }, { timestamps: true })

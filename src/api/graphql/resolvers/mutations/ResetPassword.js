@@ -7,8 +7,8 @@ const ResetPassword = async ({ args, User }) => {
         const { email, secret } = args
 
         const isUser = await User.findOne({ email })
-        if (!isUser) return { success: false, message: "User does not exist!" }
-        if (isUser.secret !== secret) return { success: false, message: "Wrong Secret Code!" }
+        if (!isUser) return { success: false, message: "User doesn't exist!" }
+        if (isUser.secret !== secret) return { success: false, message: "Invalid Secret Code!" }
 
         const password = tempPassword()
         const hashedPassword = await bcrypt.hash(password, 10)
@@ -17,7 +17,7 @@ const ResetPassword = async ({ args, User }) => {
 
         await sendPassword({ email: isUser.email, name: isUser.name, password })
 
-        return { success: true, message: "A temporary password has successfully sent to your email." }
+        return { success: true, message: "A temporary password has been sent to your email." }
     } catch (err) {
         return { success: false, message: "There is some server error, try again later." }
     }

@@ -6,7 +6,6 @@ require('dotenv').config()
 const upload = multer.single('file')
 const bucket = require('../../config/gcp')
 
-
 function profileimageupload(app) {
     app.post('/profileimageupload', (req, res) => {
         upload(req, res, async function (err) {
@@ -20,11 +19,11 @@ function profileimageupload(app) {
 
                 if (!file) res.json({ success: false, message: "No Image found!" })
                 const isUser = await User.findById(userId)
-                if (!isUser) return res.json({ success: false, message: "User does not exist" })
+                if (!isUser) return res.json({ success: false, message: "User doesn't exist" })
 
                 if (isUser.image) {
-                    const existingFileName = isUser.image.substring(47)
-                    await bucket.file(existingFileName).delete()
+                    const existingImage = isUser.image.substring(47)
+                    await bucket.file(existingImage).delete()
                 }
 
                 const newFileName = randomSecret() + file.originalname

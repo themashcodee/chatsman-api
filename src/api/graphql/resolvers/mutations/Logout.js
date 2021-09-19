@@ -3,6 +3,7 @@ async function Logout({ args, User, res }) {
         const { id } = args
         const isUser = await User.findById(id)
         if (!isUser) return { success: false, message: "User does not exist!" }
+
         res.cookie('refreshToken', null, {
             maxAge: 0,
             secure: true,
@@ -11,7 +12,7 @@ async function Logout({ args, User, res }) {
             sameSite: 'none'
         })
 
-        return { success: true, message: "User Logged out!" }
+        return { success: true, message: "User Logged out." }
     } catch (err) {
         return { success: true, message: "There is some server error, try again later." }
     }

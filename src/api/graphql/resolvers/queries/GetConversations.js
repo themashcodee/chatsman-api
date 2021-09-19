@@ -1,24 +1,16 @@
-const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
 async function GetConversations({ User, Conversation, args }) {
     const { id } = args
     try {
         const isUserExist = await User.findById(id)
-        if (!isUserExist) return { success: false, message: 'User does not exist!' }
+        if (!isUserExist) return { success: false, message: "User doesn't exist!" }
 
         const conversations = await Conversation.find({ members: { $in: [id] } }).sort({ updatedAt: -1 })
 
-        return {
-            success: true,
-            message: 'Here are the conversations',
-            conversations
-        }
+        return { success: true, message: "", conversations }
     } catch (err) {
-        return {
-            success: false,
-            message: 'There is some server error, try again later'
-        }
+        return { success: false, message: 'There is some server error, try again later' }
     }
 }
 

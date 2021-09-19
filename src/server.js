@@ -15,7 +15,6 @@ const typeDefs = require('./api/graphql/typeDefs/index');
 const resolvers = require('./api/graphql/resolvers/index');
 const corsOption = require('./config/cors')
 
-// 
 const { createServer } = require('http');
 const { execute, subscribe } = require('graphql');
 const { SubscriptionServer } = require('subscriptions-transport-ws');

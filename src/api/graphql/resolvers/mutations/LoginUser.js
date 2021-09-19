@@ -7,10 +7,10 @@ async function LoginUser({ args, User, res }) {
         const { password, email, secret } = args
 
         const isUser = await User.findOne({ email, secret })
-        if (!isUser) return { success: false, message: "Wrong details" }
+        if (!isUser) return { success: false, message: "Invalid details!" }
 
         const isPasswordCorrect = await bcrypt.compare(password, isUser.password)
-        if (!isPasswordCorrect) return { success: false, message: "Wrong details" }
+        if (!isPasswordCorrect) return { success: false, message: "Invalid details!" }
 
         const accessToken = createToken({ id: isUser._id, type: 'access' })
         const refreshToken = createToken({ id: isUser._id, type: 'refresh' })
@@ -23,7 +23,7 @@ async function LoginUser({ args, User, res }) {
             sameSite: 'none'
         })
 
-        return { token: accessToken, user: isUser, success: true, message: "User Logged In" }
+        return { token: accessToken, user: isUser, success: true, message: "User Logged In." }
     } catch (err) {
         return { success: false, message: 'There is some server error, try again later.' }
     }
