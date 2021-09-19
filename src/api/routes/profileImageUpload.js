@@ -42,7 +42,7 @@ function profileimageupload(app) {
                     await isUser.save()
                 })
                 blobStream.end(file.buffer)
-                res.json({ success: true, message: 'Profile Picture Uploaded!' })
+                res.json({ success: true, message: 'Profile picture updated successfully!' })
             } catch (err) {
                 res.json({ success: false, message: "There is some server error, try again later." })
             }
