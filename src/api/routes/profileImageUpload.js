@@ -17,7 +17,6 @@ function profileimageupload(app) {
         upload(req, res, async function (err) {
             if (err) {
                 if (err.code === 'LIMIT_FILE_SIZE') return res.json({ success: false, message: "Image size can't be more than 5MB!" })
-                console.log('MULTER ERROR', err)
                 return res.json({ success: false, message: 'There is some error in image uploading, try again later.' })
             }
             try {
@@ -41,11 +40,10 @@ function profileimageupload(app) {
                     const publicUrl = `https://storage.googleapis.com/${process.env.GCP_BUCKET}/${blob.name}`
                     isUser.image = publicUrl
                     await isUser.save()
+                    blobStream.end(file.buffer)
+                    res.json({ success: true, message: 'Profile picture updated successfully!' })
                 })
-                blobStream.end(file.buffer)
-                res.json({ success: true, message: 'Profile picture updated successfully!' })
             } catch (err) {
-                console.log('MAIN ERROR', err)
                 res.json({ success: false, message: "There is some server error, try again later." })
             }
         })
