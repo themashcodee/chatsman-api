@@ -11,6 +11,7 @@
   "license": "ISC",
   "devDependencies": {},
   "dependencies": {
+    "@google-cloud/storage": "^5.14.2",
     "@graphql-tools/schema": "^8.2.0",
     "@sendgrid/mail": "^7.4.6",
     "apollo-server-express": "^3.3.0",

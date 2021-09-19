@@ -1,34 +1,53 @@
-const uploadImage = require('../middlewares/multer')
+const multer = require('../middlewares/multer')
 const User = require('../mongodb/models/User')
-const fs = require('fs')
+const { Storage } = require('@google-cloud/storage')
+const randomSecret = require('../helpers/randomSecret')
+require('dotenv').config()
 
-// MIDDLEWARE
-// uploadImage.single('image'),
+const upload = multer.single('file')
+
+const storage = new Storage({
+    projectId: process.env.GCP_PROJECT,
+    credentials: { client_email: process.env.GCP_CLIENT_EMAIL, private_key: process.env.GCP_PRIVATE_KEY }
+});
+const bucket = storage.bucket(process.env.GCP_BUCKET);
 
 function profileimageupload(app) {
-    app.post('/profileimageupload', async (req, res) => {
-        return res.json({ success: true, message: "This feature is not available yet" })
-        // try {
-        //     const { filename } = req.file
-        //     const userId = req.body.id
+    app.post('/profileimageupload', (req, res) => {
+        upload(req, res, async function (err) {
+            if (err) {
+                if (err.code === 'LIMIT_FILE_SIZE') return res.json({ success: false, message: "Image size can't be more than 5MB!" })
+                return res.json({ success: false, message: 'There is some error in image uploading, try again later.' })
+            }
+            try {
+                const file = req.file
+                const userId = req.body.id
 
-        //     const isUser = await User.findById(userId)
-        //     if (!isUser) return res.json({ success: false, message: "User does not exist" })
-        //     const url = `https://chatsmanapi.herokuapp.com/${filename}`
+                if (!file) res.json({ success: false, message: "No Image found!" })
+                const isUser = await User.findById(userId)
+                if (!isUser) return res.json({ success: false, message: "User does not exist" })
 
-        //     if (!!isUser.image) {
-        //         const alreadyExistImageName = isUser.image.substring(34)
-        //         fs.unlinkSync(`./src/images/${alreadyExistImageName}`)
-        //     }
+                if (isUser.image) {
+                    const existingFileName = isUser.image.substring(47)
+                    await bucket.file(existingFileName).delete()
+                }
 
-        //     isUser.image = url
-        //     await isUser.save()
-
-        //     res.json({ success: true, message: "Profile Picture changed." })
-        // } catch (err) {
-        //     res.json({ success: false, message: "There is some server error, try again later." })
-        // }
-    })
+                const newFileName = randomSecret() + file.originalname
+                const blob = bucket.file(newFileName)
+                const blobStream = blob.createWriteStream()
+                blobStream.on('error', err => console.log(err))
+                blobStream.on('finish', async () => {
+                    const publicUrl = `https://storage.googleapis.com/${process.env.GCP_BUCKET}/${blob.name}`
+                    isUser.image = publicUrl
+                    await isUser.save()
+                })
+                blobStream.end(file.buffer)
+                res.json({ success: true, message: 'Profile Picture Uploaded!' })
+            } catch (err) {
+                res.json({ success: false, message: "There is some server error, try again later." })
+            }
+        })
+    });
 }
 
 module.exports = profileimageupload
