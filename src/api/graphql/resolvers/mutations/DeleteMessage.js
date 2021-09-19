@@ -12,7 +12,7 @@ const DeleteMessage = async ({ args, pubsub, Message }) => {
         );
         pubsub.publish(
             `${conversationId}LM`,
-            { lastMessageAdded: { success: true, message: "", messages: messages.length && messages[messages.length - 1] } }
+            { lastMessageAdded: { success: true, message: "", messages: messages[messages.length - 1] } }
         );
 
         return { success: true, message: "Message has been deleted." }
