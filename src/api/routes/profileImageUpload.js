@@ -11,6 +11,7 @@ const storage = new Storage({
     credentials: { client_email: process.env.GCP_CLIENT_EMAIL, private_key: process.env.GCP_PRIVATE_KEY.replace(/\\n/g, '\n') }
 });
 const bucket = storage.bucket(process.env.GCP_BUCKET);
+let publicUrl = '';
 
 function profileimageupload(app) {
     app.post('/profileimageupload', (req, res) => {
@@ -36,13 +37,11 @@ function profileimageupload(app) {
                 const blob = bucket.file(newFileName)
                 const blobStream = blob.createWriteStream()
                 blobStream.on('error', err => console.log(err))
-                blobStream.on('finish', async () => {
-                    const publicUrl = `https://storage.googleapis.com/${process.env.GCP_BUCKET}/${blob.name}`
-                    isUser.image = publicUrl
-                    await isUser.save()
-                    res.json({ success: true, message: 'Profile picture updated successfully!' })
-                })
+                blobStream.on('finish', () => publicUrl = `https://storage.googleapis.com/${process.env.GCP_BUCKET}/${blob.name}`)
+                isUser.image = publicUrl
+                await isUser.save()
                 blobStream.end(file.buffer)
+                res.json({ success: true, message: 'Profile picture updated successfully!' })
             } catch (err) {
                 res.json({ success: false, message: "There is some server error, try again later." })
             }
