@@ -40,9 +40,9 @@ function profileimageupload(app) {
                     const publicUrl = `https://storage.googleapis.com/${process.env.GCP_BUCKET}/${blob.name}`
                     isUser.image = publicUrl
                     await isUser.save()
-                    blobStream.end(file.buffer)
                     res.json({ success: true, message: 'Profile picture updated successfully!' })
                 })
+                blobStream.end(file.buffer)
             } catch (err) {
                 res.json({ success: false, message: "There is some server error, try again later." })
             }
