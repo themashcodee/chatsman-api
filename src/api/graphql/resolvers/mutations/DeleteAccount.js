@@ -1,3 +1,6 @@
+const bucket = require('../../../../config/gcp')
+
+
 async function DeleteAccount({ args, User, res, Conversation, Message }) {
     try {
         const { secret, id } = args
@@ -5,6 +8,12 @@ async function DeleteAccount({ args, User, res, Conversation, Message }) {
         const isUser = await User.findById(id)
         if (!isUser) return { success: false, message: "User does not exist!" }
         if (isUser.secret !== secret) return { success: false, message: "Wrong Secret Code!" }
+
+
+        if (isUser.image) {
+            const existingFileName = isUser.image.substring(47)
+            await bucket.file(existingFileName).delete()
+        }
 
         await User.deleteOne({ secret, _id: id })
 
