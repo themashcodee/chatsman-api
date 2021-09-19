@@ -20,7 +20,6 @@ function profileimageupload(app) {
                 return res.json({ success: false, message: 'There is some error in image uploading, try again later.' })
             }
             try {
-                let publicUrl = '';
                 const file = req.file
                 const userId = req.body.id
 
@@ -37,11 +36,13 @@ function profileimageupload(app) {
                 const blob = bucket.file(newFileName)
                 const blobStream = blob.createWriteStream()
                 blobStream.on('error', err => console.log(err))
-                blobStream.on('finish', () => publicUrl = `https://storage.googleapis.com/${process.env.GCP_BUCKET}/${blob.name}`)
-                isUser.image = publicUrl
-                await isUser.save()
+                blobStream.on('finish', async () => {
+                    const publicUrl = `https://storage.googleapis.com/${process.env.GCP_BUCKET}/${blob.name}`
+                    isUser.image = publicUrl
+                    await isUser.save()
+                    res.json({ success: true, message: 'Profile picture updated successfully!' })
+                })
                 blobStream.end(file.buffer)
-                res.json({ success: true, message: 'Profile picture updated successfully!' })
             } catch (err) {
                 console.log('MAIN IMAGE ULOAD ERROR', err)
                 res.json({ success: false, message: "There is some server error, try again later." })
