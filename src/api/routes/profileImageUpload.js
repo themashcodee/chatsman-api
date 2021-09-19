@@ -11,7 +11,6 @@ const storage = new Storage({
     credentials: { client_email: process.env.GCP_CLIENT_EMAIL, private_key: process.env.GCP_PRIVATE_KEY.replace(/\\n/g, '\n') }
 });
 const bucket = storage.bucket(process.env.GCP_BUCKET);
-let publicUrl = '';
 
 function profileimageupload(app) {
     app.post('/profileimageupload', (req, res) => {
@@ -21,6 +20,7 @@ function profileimageupload(app) {
                 return res.json({ success: false, message: 'There is some error in image uploading, try again later.' })
             }
             try {
+                let publicUrl = '';
                 const file = req.file
                 const userId = req.body.id
 
@@ -43,6 +43,7 @@ function profileimageupload(app) {
                 blobStream.end(file.buffer)
                 res.json({ success: true, message: 'Profile picture updated successfully!' })
             } catch (err) {
+                console.log('MAIN IMAGE ULOAD ERROR', err)
                 res.json({ success: false, message: "There is some server error, try again later." })
             }
         })
