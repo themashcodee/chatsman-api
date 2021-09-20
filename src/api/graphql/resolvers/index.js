@@ -10,6 +10,8 @@ const ChangePassword = require('./mutations/ChangePassword')
 const LoginUser = require('./mutations/LoginUser')
 const Logout = require('./mutations/Logout')
 
+const DeleteWallpaper = require('./mutations/DeleteWallpaper')
+const DeleteDP = require('./mutations/DeleteDP')
 const DeleteAccount = require('./mutations/DeleteAccount')
 const DeleteConversation = require('./mutations/DeleteConversation')
 const DeleteMessage = require('./mutations/DeleteMessage')
@@ -37,9 +39,11 @@ const resolvers = {
         lastMessageAdded: { subscribe: async (_, { conversationId }) => await LastMessageAdded({ conversationId }) },
     },
     Mutation: {
+        deleteWallpaper: async (_, args, { Conversation, bucket }) => await DeleteWallpaper({ args, bucket, Conversation }),
+        deleteDP: async (_, args, { User, bucket }) => await DeleteDP({ args, bucket, User }),
         deleteMessage: async (_, args, { pubsub, Message }) => await DeleteMessage({ pubsub, args, Message }),
-        deleteAccount: async (_, args, { User, res, Conversation, Message }) => await DeleteAccount({ args, Message, User, res, Conversation }),
-        deleteConversation: async (_, args, { pubsub, Conversation, Message }) => await DeleteConversation({ args, pubsub, Conversation, Message }),
+        deleteAccount: async (_, args, { User, res, bucket, Conversation, Message }) => await DeleteAccount({ args, Message, User, res, Conversation, bucket }),
+        deleteConversation: async (_, args, { pubsub, bucket, Conversation, Message }) => await DeleteConversation({ args, pubsub, Conversation, bucket, Message }),
 
         resetPassword: async (_, args, { User }) => await ResetPassword({ args, User }),
         resetSecretCode: async (_, args, { User }) => await ResetSecretCode({ args, User }),

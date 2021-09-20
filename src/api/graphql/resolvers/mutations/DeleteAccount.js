@@ -1,6 +1,4 @@
-const bucket = require('../../../../config/gcp')
-
-async function DeleteAccount({ args, User, res, Conversation, Message }) {
+async function DeleteAccount({ args, User, res, bucket, Conversation, Message }) {
     try {
         const { secret, id } = args
 
@@ -18,6 +16,10 @@ async function DeleteAccount({ args, User, res, Conversation, Message }) {
 
         const conversations = await Conversation.find({ members: { $in: [id] } })
         conversations.forEach(async (conversation) => {
+            if (conversation.wallpaper) {
+                const existingImage = conversation.wallpaper.substring(47)
+                await bucket.file(existingImage).delete()
+            }
             await Message.deleteMany({ conversationId: conversation._id })
         })
 

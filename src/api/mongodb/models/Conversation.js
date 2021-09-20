@@ -5,7 +5,7 @@ const schema = mongoose.Schema({
         required: true,
         type: [String]
     },
-    background: {
+    wallpaper: {
         type: String
     }
 }, { timestamps: true })

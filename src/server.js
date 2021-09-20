@@ -9,7 +9,8 @@ const cookieParser = require('cookie-parser')
 require('dotenv').config()
 
 const refreshTokenRoute = require('./api/routes/refreshToken')
-const profileimageupload = require('./api/routes/profileImageUpload')
+const profileImageUpload = require('./api/routes/profileImageUpload')
+const backgroundUpload = require('./api/routes/backgroundUpload');
 
 const typeDefs = require('./api/graphql/typeDefs/index');
 const resolvers = require('./api/graphql/resolvers/index');
@@ -21,6 +22,8 @@ const { SubscriptionServer } = require('subscriptions-transport-ws');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
 const pubsub = require('./config/pubsub')
 
+const bucket = require('./config/gcp');
+
 
 async function startApolloServer() {
     try {
@@ -31,7 +34,7 @@ async function startApolloServer() {
 
         const server = new ApolloServer({
             schema,
-            context: ({ req, res }) => ({ token: req.headers.authorization, res, User, pubsub, Conversation, Message }),
+            context: ({ req, res }) => ({ token: req.headers.authorization, res, User, bucket, pubsub, Conversation, Message }),
             introspection: typeof window !== undefined,
             plugins: [{
                 async serverWillStart() {
@@ -65,7 +68,8 @@ async function startApolloServer() {
             express.static('./src/images')
         )
         refreshTokenRoute(app)
-        profileimageupload(app)
+        profileImageUpload(app)
+        backgroundUpload(app)
 
         await mongoose.connect(process.env.MANGO_DB_URI)
 

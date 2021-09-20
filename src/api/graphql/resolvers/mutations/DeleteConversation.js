@@ -1,4 +1,4 @@
-const DeleteChat = async ({ args, pubsub, Conversation, Message }) => {
+const DeleteChat = async ({ args, pubsub, Conversation, Message, bucket }) => {
     try {
         const { conversationId } = args
 
@@ -6,6 +6,11 @@ const DeleteChat = async ({ args, pubsub, Conversation, Message }) => {
         if (!isConversation) return { success: false, message: "Conversation doesn't exist!" }
 
         await Message.deleteMany({ conversationId })
+
+        if (isConversation.wallpaper) {
+            const existingImage = isConversation.wallpaper.substring(47)
+            await bucket.file(existingImage).delete()
+        }
         await Conversation.deleteOne({ _id: conversationId })
 
         isConversation.members.forEach(async (id) => {

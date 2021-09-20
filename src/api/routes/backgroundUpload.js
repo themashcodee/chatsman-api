@@ -1,13 +1,13 @@
 const multer = require('../middlewares/multer')
-const User = require('../mongodb/models/User')
+const Conversation = require('../mongodb/models/Conversation')
 const randomSecret = require('../helpers/randomSecret')
 require('dotenv').config()
 
 const upload = multer.single('file')
 const bucket = require('../../config/gcp')
 
-function profileImageUpload(app) {
-    app.post('/profileimageupload', (req, res) => {
+function backgroundUpload(app) {
+    app.post('/backgroundupload', (req, res) => {
         upload(req, res, async function (err) {
             if (err) {
                 if (err.code === 'LIMIT_FILE_SIZE') return res.json({ success: false, message: "Image size can't be more than 5MB!" })
@@ -15,14 +15,14 @@ function profileImageUpload(app) {
             }
             try {
                 const file = req.file
-                const userId = req.body.id
+                const convId = req.body.id
 
                 if (!file) res.json({ success: false, message: "No Image found!" })
-                const isUser = await User.findById(userId)
-                if (!isUser) return res.json({ success: false, message: "User doesn't exist" })
+                const isConversation = await Conversation.findById(convId)
+                if (!isConversation) return res.json({ success: false, message: "Conversation doesn't exist!" })
 
-                if (isUser.image) {
-                    const existingImage = isUser.image.substring(47)
+                if (isConversation.wallpaper) {
+                    const existingImage = isConversation.wallpaper.substring(47)
                     await bucket.file(existingImage).delete()
                 }
 
@@ -32,9 +32,9 @@ function profileImageUpload(app) {
                 blobStream.on('error', err => res.json({ success: false, message: "There is some server error, try again later" }))
                 blobStream.on('finish', async () => {
                     const publicUrl = `https://storage.googleapis.com/${process.env.GCP_BUCKET}/${blob.name}`
-                    isUser.image = publicUrl
-                    await isUser.save()
-                    res.json({ success: true, message: 'Profile picture has been updated!' })
+                    isConversation.wallpaper = publicUrl
+                    await isConversation.save()
+                    res.json({ success: true, message: 'Background has been updated!' })
                 })
                 blobStream.end(file.buffer)
             } catch (err) {
@@ -44,4 +44,4 @@ function profileImageUpload(app) {
     });
 }
 
-module.exports = profileImageUpload
+module.exports = backgroundUpload

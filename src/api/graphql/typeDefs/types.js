@@ -16,7 +16,7 @@ const ConversationType =
     `type Conversation{
         id:ID!
         members:[ID!]!
-        background:String
+        wallpaper:String
     }`
 
 const UserType =

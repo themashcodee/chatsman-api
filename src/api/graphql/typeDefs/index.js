@@ -34,7 +34,8 @@ const typeDefs = gql`
         lastMessageAdded(conversationId:ID!):GetLastMessage!
     }
     type Mutation{
-        deleteProfileImage(id:ID!):BaseResponse!
+        deleteDP(id:ID!):BaseResponse!
+        deleteWallpaper(id:ID!userId:ID!):BaseResponse!
         deleteMessage(id:ID!,senderId:ID!,conversationId:ID!):BaseResponse!
         deleteConversation(conversationId:ID!):BaseResponse!
         deleteAccount(secret:Int!,id:ID!):BaseResponse!
