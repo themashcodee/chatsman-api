@@ -15,6 +15,11 @@ const DeleteWallpaper = async ({ args, Conversation, bucket }) => {
         isConversation.wallpaper = ''
         await isConversation.save()
 
+        isConversation.members.forEach(async (id) => {
+            const conversations = await Conversation.find({ members: { $in: [id] } }).sort({ updatedAt: -1 })
+            pubsub.publish(id, { conversationAdded: { success: true, message: "", conversations } });
+        })
+
         return { success: true, message: "Wallpaper has been deleted." }
 
     } catch (err) {

@@ -20,10 +20,9 @@ const DeleteMessage = require('./mutations/DeleteMessage')
 const GetUser = require('./queries/GetUser')
 const GetConversations = require('./queries/GetConversations')
 const GetMessages = require('./queries/GetMessages')
-const GetLastMessage = require('./queries/GetLastMessage')
 
 // SUBSCRIPTION
-const { MessageAdded, ConversationAdded, LastMessageAdded } = require('./subscription/index')
+const { MessageAdded, ConversationAdded } = require('./subscription/index')
 
 
 const resolvers = {
@@ -31,17 +30,15 @@ const resolvers = {
         getUser: async (_, args, { User }, __) => await GetUser({ args, User }),
         getConversations: async (_, args, { User, Conversation }) => await GetConversations({ args, User, Conversation }),
         getMessages: async (_, args, { Message }) => await GetMessages({ args, Message }),
-        getLastMessage: async (_, args, { Message }) => await GetLastMessage({ args, Message }),
     },
     Subscription: {
         messageAdded: { subscribe: async (_, { conversationId }) => await MessageAdded({ conversationId }) },
         conversationAdded: { subscribe: async (_, { id }) => await ConversationAdded({ id }) },
-        lastMessageAdded: { subscribe: async (_, { conversationId }) => await LastMessageAdded({ conversationId }) },
     },
     Mutation: {
         deleteWallpaper: async (_, args, { Conversation, bucket }) => await DeleteWallpaper({ args, bucket, Conversation }),
         deleteDP: async (_, args, { User, bucket }) => await DeleteDP({ args, bucket, User }),
-        deleteMessage: async (_, args, { pubsub, Message }) => await DeleteMessage({ pubsub, args, Message }),
+        deleteMessage: async (_, args, { pubsub, Message, Conversation }) => await DeleteMessage({ Conversation, pubsub, args, Message }),
         deleteAccount: async (_, args, { User, res, bucket, Conversation, Message }) => await DeleteAccount({ args, Message, User, res, Conversation, bucket }),
         deleteConversation: async (_, args, { pubsub, bucket, Conversation, Message }) => await DeleteConversation({ args, pubsub, Conversation, bucket, Message }),
 

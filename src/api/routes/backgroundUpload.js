@@ -2,6 +2,7 @@ const multer = require('../middlewares/multer')
 const Conversation = require('../mongodb/models/Conversation')
 const randomSecret = require('../helpers/randomSecret')
 require('dotenv').config()
+const pubsub = require('../../config/pubsub')
 
 const upload = multer.single('file')
 const bucket = require('../../config/gcp')
@@ -34,6 +35,10 @@ function backgroundUpload(app) {
                     const publicUrl = `https://storage.googleapis.com/${process.env.GCP_BUCKET}/${blob.name}`
                     isConversation.wallpaper = publicUrl
                     await isConversation.save()
+                    isConversation.members.forEach(async (id) => {
+                        const conversations = await Conversation.find({ members: { $in: [id] } }).sort({ updatedAt: -1 })
+                        pubsub.publish(id, { conversationAdded: { success: true, message: "", conversations } });
+                    })
                     res.json({ success: true, message: 'Background has been updated!' })
                 })
                 blobStream.end(file.buffer)

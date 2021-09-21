@@ -11,13 +11,17 @@ const CreateMessage = async ({ args, pubsub, Message, Conversation }) => {
         const newMessage = new Message({ conversationId, senderId, type: 'TEXT', content })
         await newMessage.save()
 
+        isConversation.lastMessage = newMessage.content
+        isConversation.lastMessageType = newMessage.type
+        await isConversation.save()
+
         const messages = await Message.find({ conversationId }).sort({ createdAt: -1 }).limit(50)
 
         pubsub.publish(conversationId, { messageAdded: { success: true, message: "", messages: messages.reverse() } });
-        pubsub.publish(
-            `${conversationId}LM`,
-            { lastMessageAdded: { success: true, message: "", messages: messages[messages.length - 1] } }
-        );
+        isConversation.members.forEach(async (id) => {
+            const conversations = await Conversation.find({ members: { $in: [id] } }).sort({ updatedAt: -1 })
+            pubsub.publish(id, { conversationAdded: { success: true, message: "", conversations } });
+        })
 
         return { success: true, message: "Message has been Sent." }
     } catch (err) {

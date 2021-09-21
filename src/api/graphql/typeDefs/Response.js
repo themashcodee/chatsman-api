@@ -23,16 +23,10 @@ const GetMessages =
         message:String!
         messages:[Message]
     }`
-const GetLastMessage =
-    `type GetLastMessage implements Response{
-        success:Boolean!
-        message:String!
-        messages:Message
-    }`
 const BaseResponse =
     `type BaseResponse {
         success: Boolean!
         message: String!
     }`
 
-module.exports = { BaseResponse, GetLastMessage, GetMessages, GetUser, GetConversations, LoginUser }
+module.exports = { BaseResponse, GetMessages, GetUser, GetConversations, LoginUser }

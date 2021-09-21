@@ -1,7 +1,7 @@
 const { gql } = require("apollo-server-express");
 
 const { MessageType, UserType, ConversationType } = require('./types')
-const { BaseResponse, GetLastMessage, GetMessages, LoginUser, GetConversations, GetUser } = require('./Response')
+const { BaseResponse, GetMessages, LoginUser, GetConversations, GetUser } = require('./Response')
 
 const typeDefs = gql`
     interface Response {
@@ -11,27 +11,24 @@ const typeDefs = gql`
     scalar Upload
 
     ${UserType}
-    ${ConversationType}
     ${MessageType}
+    ${ConversationType}
 
     ${BaseResponse}
     ${LoginUser}
     ${GetUser}
     ${GetConversations}
     ${GetMessages}
-    ${GetLastMessage}
 
     
     type Query{
         getUser(username:String,id:String):GetUser!
         getConversations(id:ID!):GetConversations!
         getMessages(conversationId:ID!,isFull:Boolean):GetMessages!
-        getLastMessage(conversationId:ID!):GetLastMessage!
     }
     type Subscription{
         conversationAdded(id:ID!):GetConversations!
         messageAdded(conversationId:ID!):GetMessages!
-        lastMessageAdded(conversationId:ID!):GetLastMessage!
     }
     type Mutation{
         deleteDP(id:ID!):BaseResponse!

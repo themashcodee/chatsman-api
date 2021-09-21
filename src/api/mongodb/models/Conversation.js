@@ -5,6 +5,13 @@ const schema = mongoose.Schema({
         required: true,
         type: [String]
     },
+    lastMessage: {
+        type: String,
+    },
+    lastMessageType: {
+        type: String,
+        enum: ['TEXT', 'IMAGE'],
+    },
     wallpaper: {
         type: String
     }

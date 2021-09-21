@@ -17,6 +17,9 @@ const ConversationType =
         id:ID!
         members:[ID!]!
         wallpaper:String
+        lastMessage:String
+        lastMessageType:MessageType
+        updatedAt:String!
     }`
 
 const UserType =

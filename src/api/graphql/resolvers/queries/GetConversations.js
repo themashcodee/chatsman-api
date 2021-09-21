@@ -6,7 +6,7 @@ async function GetConversations({ User, Conversation, args }) {
         const isUserExist = await User.findById(id)
         if (!isUserExist) return { success: false, message: "User doesn't exist!" }
 
-        const conversations = await Conversation.find({ members: { $in: [id] } }).sort({ createdAt: -1 })
+        const conversations = await Conversation.find({ members: { $in: [id] } }).sort({ updatedAt: -1 })
 
         return { success: true, message: "", conversations }
     } catch (err) {
