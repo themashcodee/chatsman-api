@@ -16,8 +16,8 @@ const DeleteMessage = async ({ args, pubsub, bucket, Message, Conversation }) =>
 
         const messages = await Message.find({ conversationId }).sort({ createdAt: -1 }).limit(50)
 
-        isConversation.lastMessage = messages[0]?.content
-        isConversation.lastMessageType = messages[0]?.type
+        isConversation.lastMessage = messages[0]
+        isConversation.lastMessageTime = messages[0]?.createdAt
         await isConversation.save()
 
         pubsub.publish(

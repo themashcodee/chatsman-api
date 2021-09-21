@@ -1,17 +1,15 @@
 const mongoose = require('mongoose')
+const { MessageSchema } = require('./Message')
 
 const schema = mongoose.Schema({
     members: {
         required: true,
         type: [String]
     },
-    lastMessage: {
-        type: String,
+    lastMessageTime: {
+        type: Date
     },
-    lastMessageType: {
-        type: String,
-        enum: ['TEXT', 'IMAGE'],
-    },
+    lastMessage: MessageSchema,
     wallpaper: {
         type: String
     }

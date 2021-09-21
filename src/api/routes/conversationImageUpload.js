@@ -1,6 +1,6 @@
 const multer = require('../middlewares/multer')
 const Conversation = require('../mongodb/models/Conversation')
-const Message = require('../mongodb/models/Message')
+const { Message } = require('../mongodb/models/Message')
 const randomSecret = require('../helpers/randomSecret')
 require('dotenv').config()
 const pubsub = require('../../config/pubsub')
@@ -36,8 +36,8 @@ function conversationImageUpload(app) {
                     const newMessage = new Message({ conversationId, senderId, type: 'IMAGE', content: publicUrl })
                     await newMessage.save()
 
-                    isConversation.lastMessage = newMessage.content
-                    isConversation.lastMessageType = newMessage.type
+                    isConversation.lastMessage = newMessage
+                    isConversation.lastMessageTime = newMessage.createdAt
                     await isConversation.save()
 
                     const messages = await Message.find({ conversationId }).sort({ createdAt: -1 }).limit(50)

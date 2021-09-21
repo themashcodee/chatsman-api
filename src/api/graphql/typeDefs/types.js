@@ -10,6 +10,7 @@ const MessageType =
         type:MessageType!
         content:String!
         createdAt:String!
+        updatedAt:String!
     }`
 
 const ConversationType =
@@ -17,8 +18,8 @@ const ConversationType =
         id:ID!
         members:[ID!]!
         wallpaper:String
-        lastMessage:String
-        lastMessageType:MessageType
+        lastMessage:Message
+        lastMessageTime:String
         updatedAt:String!
     }`
 

@@ -11,8 +11,8 @@ const CreateMessage = async ({ args, pubsub, Message, Conversation }) => {
         const newMessage = new Message({ conversationId, senderId, type: 'TEXT', content })
         await newMessage.save()
 
-        isConversation.lastMessage = newMessage.content
-        isConversation.lastMessageType = newMessage.type
+        isConversation.lastMessage = newMessage
+        isConversation.lastMessageTime = newMessage.createdAt
         await isConversation.save()
 
         const messages = await Message.find({ conversationId }).sort({ createdAt: -1 }).limit(50)

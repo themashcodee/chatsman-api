@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose')
 const User = require('./api/mongodb/models/User')
 const Conversation = require('./api/mongodb/models/Conversation')
-const Message = require('./api/mongodb/models/Message')
+const { Message } = require('./api/mongodb/models/Message')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 require('dotenv').config()
