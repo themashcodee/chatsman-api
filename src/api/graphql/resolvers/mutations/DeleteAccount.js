@@ -20,6 +20,13 @@ async function DeleteAccount({ args, User, res, bucket, Conversation, Message })
                 const existingImage = conversation.wallpaper.substring(47)
                 await bucket.file(existingImage).delete()
             }
+            const imagesMessages = await Message.find({ conversationId: conversation._id, type: "IMAGE" })
+            if (imagesMessages.length) {
+                imagesMessages.forEach(async (message) => {
+                    const existingImage = message.content.substring(47)
+                    await bucket.file(existingImage).delete()
+                })
+            }
             await Message.deleteMany({ conversationId: conversation._id })
         })
 

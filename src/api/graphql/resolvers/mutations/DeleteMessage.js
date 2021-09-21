@@ -1,12 +1,18 @@
-const DeleteMessage = async ({ args, pubsub, Message, Conversation }) => {
+const DeleteMessage = async ({ args, pubsub, bucket, Message, Conversation }) => {
     try {
         const { id, senderId, conversationId } = args
 
         const isConversation = await Conversation.findById(conversationId)
         if (!isConversation) return { success: false, message: "Conversation doesn't exist!" }
 
-        const isMessage = await Message.deleteOne({ _id: id, senderId, conversationId })
+        const isMessage = await Message.findOne({ _id: id, senderId, conversationId })
         if (!isMessage) return { success: false, message: "Message does not exist." }
+
+        if (isMessage.type === 'IMAGE') {
+            const existingImage = isMessage.content.substring(47)
+            await bucket.file(existingImage).delete()
+        }
+        await Message.deleteOne({ _id: id, senderId, conversationId })
 
         const messages = await Message.find({ conversationId }).sort({ createdAt: -1 }).limit(50)
 

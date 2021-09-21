@@ -11,6 +11,7 @@ require('dotenv').config()
 const refreshTokenRoute = require('./api/routes/refreshToken')
 const profileImageUpload = require('./api/routes/profileImageUpload')
 const backgroundUpload = require('./api/routes/backgroundUpload');
+const conversationImageUpload = require('./api/routes/conversationimageupload');
 
 const typeDefs = require('./api/graphql/typeDefs/index');
 const resolvers = require('./api/graphql/resolvers/index');
@@ -70,6 +71,7 @@ async function startApolloServer() {
         refreshTokenRoute(app)
         profileImageUpload(app)
         backgroundUpload(app)
+        conversationImageUpload(app)
 
         await mongoose.connect(process.env.MANGO_DB_URI)
 

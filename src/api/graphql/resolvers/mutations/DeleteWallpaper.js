@@ -1,4 +1,4 @@
-const DeleteWallpaper = async ({ args, Conversation, bucket }) => {
+const DeleteWallpaper = async ({ args, Conversation, pubsub, bucket }) => {
     try {
         const { id, userId } = args
 

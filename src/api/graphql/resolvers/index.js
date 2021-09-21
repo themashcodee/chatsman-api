@@ -36,9 +36,9 @@ const resolvers = {
         conversationAdded: { subscribe: async (_, { id }) => await ConversationAdded({ id }) },
     },
     Mutation: {
-        deleteWallpaper: async (_, args, { Conversation, bucket }) => await DeleteWallpaper({ args, bucket, Conversation }),
+        deleteWallpaper: async (_, args, { Conversation, pubsub, bucket }) => await DeleteWallpaper({ args, bucket, Conversation, pubsub }),
         deleteDP: async (_, args, { User, bucket }) => await DeleteDP({ args, bucket, User }),
-        deleteMessage: async (_, args, { pubsub, Message, Conversation }) => await DeleteMessage({ Conversation, pubsub, args, Message }),
+        deleteMessage: async (_, args, { pubsub, bucket, Message, Conversation }) => await DeleteMessage({ Conversation, pubsub, args, Message, bucket }),
         deleteAccount: async (_, args, { User, res, bucket, Conversation, Message }) => await DeleteAccount({ args, Message, User, res, Conversation, bucket }),
         deleteConversation: async (_, args, { pubsub, bucket, Conversation, Message }) => await DeleteConversation({ args, pubsub, Conversation, bucket, Message }),
 
