@@ -1,6 +1,6 @@
 require('dotenv').config()
 
-async function GetConversations({ User, Conversation, args, Message }) {
+async function GetConversations({ User, Conversation, args }) {
     const { id } = args
     try {
         const isUserExist = await User.findById(id)

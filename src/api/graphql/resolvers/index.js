@@ -29,7 +29,7 @@ const { MessageAdded, ConversationAdded, LastMessageAdded } = require('./subscri
 const resolvers = {
     Query: {
         getUser: async (_, args, { User }, __) => await GetUser({ args, User }),
-        getConversations: async (_, args, { User, Conversation, Message }) => await GetConversations({ Message, args, User, Conversation }),
+        getConversations: async (_, args, { User, Conversation }) => await GetConversations({ args, User, Conversation }),
         getMessages: async (_, args, { Message }) => await GetMessages({ args, Message }),
         getLastMessage: async (_, args, { Message }) => await GetLastMessage({ args, Message }),
     },
