@@ -42,7 +42,7 @@ function conversationImageUpload(app) {
 
                     const messages = await Message.find({ conversationId }).sort({ createdAt: -1 }).limit(50)
 
-                    pubsub.publish(conversationId, { messageAdded: { success: true, message: "", messages: messages.reverse() } });
+                    pubsub.publish(conversationId, { messageAdded: { success: true, message: "", messages } });
                     isConversation.members.forEach(async (id) => {
                         const conversations = await Conversation.find({ members: { $in: [id] } }).sort({ updatedAt: -1 })
                         pubsub.publish(id, { conversationAdded: { success: true, message: "", conversations } });

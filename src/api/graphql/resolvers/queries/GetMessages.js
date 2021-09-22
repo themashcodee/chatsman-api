@@ -8,7 +8,7 @@ const GetMessages = async ({ args, Message }) => {
         }
 
         const messages = await Message.find({ conversationId }).sort({ createdAt: -1 }).limit(50)
-        return { success: true, message: "Here are the messages", messages: messages.reverse() }
+        return { success: true, message: "Here are the messages", messages }
     } catch (err) {
         return { success: false, message: "There is some server error, try again later." }
     }

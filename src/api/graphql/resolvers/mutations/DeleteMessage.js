@@ -22,7 +22,7 @@ const DeleteMessage = async ({ args, pubsub, bucket, Message, Conversation }) =>
 
         pubsub.publish(
             conversationId,
-            { messageAdded: { success: true, message: "", messages: messages.reverse() } }
+            { messageAdded: { success: true, message: "", messages } }
         );
         isConversation.members.forEach(async (id) => {
             const conversations = await Conversation.find({ members: { $in: [id] } }).sort({ updatedAt: -1 })
