@@ -14,15 +14,23 @@ const DeleteMessage = async ({ args, pubsub, bucket, Message, Conversation }) =>
         }
         await Message.deleteOne({ _id: id, senderId, conversationId })
 
-        const messages = await Message.find({ conversationId }).sort({ createdAt: -1 }).limit(50)
+        const lastMessage = (await Message.find({ conversationId }).sort({ createdAt: -1 }).limit(1))[0]
 
-        isConversation.lastMessage = messages[0]
-        isConversation.lastMessageTime = messages[0]?.createdAt
-        await isConversation.save()
+        if (lastMessage) {
+            if (+lastMessage.createdAt < +isMessage.createdAt) {
+                isConversation.lastMessage = lastMessage
+                isConversation.lastMessageTime = lastMessage.createdAt
+                await isConversation.save()
+            }
+        } else {
+            isConversation.lastMessage = undefined
+            isConversation.lastMessageTime = undefined
+            await isConversation.save()
+        }
 
         pubsub.publish(
             conversationId,
-            { messageAdded: { success: true, message: "", messages } }
+            { messageAdded: { success: true, message: "", messages: [isMessage] } }
         );
         isConversation.members.forEach(async (id) => {
             const conversations = await Conversation.find({ members: { $in: [id] } }).sort({ updatedAt: -1 })
@@ -31,6 +39,7 @@ const DeleteMessage = async ({ args, pubsub, bucket, Message, Conversation }) =>
 
         return { success: true, message: "Message has been deleted." }
     } catch (err) {
+        console.log(err)
         return { success: false, message: 'There is some server error, try again later.' }
     }
 }

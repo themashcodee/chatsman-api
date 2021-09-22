@@ -35,7 +35,7 @@ function backgroundUpload(app) {
                         const conversations = await Conversation.find({ members: { $in: [id] } }).sort({ updatedAt: -1 })
                         pubsub.publish(id, { conversationAdded: { success: true, message: "", conversations } });
                     })
-                    res.json({ success: true, message: 'Background has been updated!' })
+                    res.json({ success: true, message: 'Background has been updated!', url: publicUrl })
 
                     if (oldUrl) {
                         const existingImage = oldUrl.substring(47)

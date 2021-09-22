@@ -40,9 +40,7 @@ function conversationImageUpload(app) {
                     isConversation.lastMessageTime = newMessage.createdAt
                     await isConversation.save()
 
-                    const messages = await Message.find({ conversationId }).sort({ createdAt: -1 }).limit(50)
-
-                    pubsub.publish(conversationId, { messageAdded: { success: true, message: "", messages } });
+                    pubsub.publish(conversationId, { messageAdded: { success: true, message: "", messages: [newMessage] } });
                     isConversation.members.forEach(async (id) => {
                         const conversations = await Conversation.find({ members: { $in: [id] } }).sort({ updatedAt: -1 })
                         pubsub.publish(id, { conversationAdded: { success: true, message: "", conversations } });
