@@ -3,7 +3,7 @@ const GetMessages = async ({ args, Message }) => {
         const { conversationId, isFull } = args
 
         if (isFull) {
-            const messages = await Message.find({ conversationId })
+            const messages = await Message.find({ conversationId }).sort({ createdAt: -1 })
             return { success: true, message: "Here are the messages", messages: messages }
         }
 
