@@ -30,7 +30,7 @@ function profileImageUpload(app) {
                     const oldUrl = isUser.image || null
                     isUser.image = publicUrl
                     await isUser.save()
-                    res.json({ success: true, message: 'Profile picture has been updated!' })
+                    res.json({ success: true, message: 'Profile picture has been updated!', user: isUser })
 
                     if (oldUrl) {
                         const existingImage = oldUrl.substring(47)

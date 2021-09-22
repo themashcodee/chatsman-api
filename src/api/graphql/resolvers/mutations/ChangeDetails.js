@@ -21,7 +21,7 @@ const ChangeDetails = async ({ args, User }) => {
         if (name) isUser.name = name
 
         await isUser.save()
-        return { success: true, message: "Details updated!" }
+        return { success: true, message: "Details updated!", user: isUser }
     } catch (err) {
         return { success: false, message: "There is some server error, try again later." }
     }

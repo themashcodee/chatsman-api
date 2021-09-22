@@ -1,7 +1,7 @@
 const { gql } = require("apollo-server-express");
 
 const { MessageType, UserType, ConversationType } = require('./types')
-const { BaseResponse, GetMessages, LoginUser, GetConversations, GetUser } = require('./Response')
+const { BaseResponse, ChangeDetails, GetMessages, LoginUser, GetConversations, GetUser } = require('./Response')
 
 const typeDefs = gql`
     interface Response {
@@ -19,6 +19,7 @@ const typeDefs = gql`
     ${GetUser}
     ${GetConversations}
     ${GetMessages}
+    ${ChangeDetails}
 
     
     type Query{
@@ -40,7 +41,7 @@ const typeDefs = gql`
         resetPassword(secret:Int!,email:String!):BaseResponse!
         resetSecretCode(email:String!):BaseResponse!
         changePassword(oldPassword:String!,newPassword:String!,id:ID!):BaseResponse!
-        changeDetails(id:ID!,name:String,username:String,description:String):BaseResponse!
+        changeDetails(id:ID!,name:String,username:String,description:String):ChangeDetails!
         logout(id:ID!):BaseResponse!
         loginUser(email:String!,password:String!,secret:Int!):LoginUser!
         

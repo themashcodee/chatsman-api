@@ -5,6 +5,12 @@ const LoginUser =
         user: User
         token: String
     }`
+const ChangeDetails =
+    `type ChangeDetails implements Response {
+        success:Boolean!
+        message:String!
+        user: User
+    }`
 const GetUser =
     `type GetUser implements Response{
         success:Boolean!
@@ -29,4 +35,4 @@ const BaseResponse =
         message: String!
     }`
 
-module.exports = { BaseResponse, GetMessages, GetUser, GetConversations, LoginUser }
+module.exports = { ChangeDetails, BaseResponse, GetMessages, GetUser, GetConversations, LoginUser }
