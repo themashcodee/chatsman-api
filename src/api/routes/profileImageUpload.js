@@ -21,20 +21,21 @@ function profileImageUpload(app) {
                 const isUser = await User.findById(userId)
                 if (!isUser) return res.json({ success: false, message: "User doesn't exist" })
 
-                if (isUser.image) {
-                    const existingImage = isUser.image.substring(47)
-                    await bucket.file(existingImage).delete()
-                }
-
                 const newFileName = randomSecret() + file.originalname
                 const blob = bucket.file(newFileName)
                 const blobStream = blob.createWriteStream()
                 blobStream.on('error', err => res.json({ success: false, message: "There is some server error, try again later" }))
                 blobStream.on('finish', async () => {
                     const publicUrl = `https://storage.googleapis.com/${process.env.GCP_BUCKET}/${blob.name}`
+                    const oldUrl = isUser.image || null
                     isUser.image = publicUrl
                     await isUser.save()
                     res.json({ success: true, message: 'Profile picture has been updated!' })
+
+                    if (oldUrl) {
+                        const existingImage = oldUrl.substring(47)
+                        await bucket.file(existingImage).delete()
+                    }
                 })
                 blobStream.end(file.buffer)
             } catch (err) {

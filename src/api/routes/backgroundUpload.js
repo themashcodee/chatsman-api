@@ -22,17 +22,13 @@ function backgroundUpload(app) {
                 const isConversation = await Conversation.findById(convId)
                 if (!isConversation) return res.json({ success: false, message: "Conversation doesn't exist!" })
 
-                if (isConversation.wallpaper) {
-                    const existingImage = isConversation.wallpaper.substring(47)
-                    await bucket.file(existingImage).delete()
-                }
-
                 const newFileName = randomSecret() + file.originalname
                 const blob = bucket.file(newFileName)
                 const blobStream = blob.createWriteStream()
                 blobStream.on('error', err => res.json({ success: false, message: "There is some server error, try again later" }))
                 blobStream.on('finish', async () => {
                     const publicUrl = `https://storage.googleapis.com/${process.env.GCP_BUCKET}/${blob.name}`
+                    const oldUrl = isConversation.wallpaper || null
                     isConversation.wallpaper = publicUrl
                     await isConversation.save()
                     isConversation.members.forEach(async (id) => {
@@ -40,6 +36,11 @@ function backgroundUpload(app) {
                         pubsub.publish(id, { conversationAdded: { success: true, message: "", conversations } });
                     })
                     res.json({ success: true, message: 'Background has been updated!' })
+
+                    if (oldUrl) {
+                        const existingImage = oldUrl.substring(47)
+                        await bucket.file(existingImage).delete()
+                    }
                 })
                 blobStream.end(file.buffer)
             } catch (err) {
