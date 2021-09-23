@@ -14,6 +14,12 @@ const schema = mongoose.Schema({
         enum: ['TEXT', 'IMAGE'],
         required: true
     },
+    replyContent: {
+        type: String
+    },
+    replyId: {
+        type: String
+    },
     content: {
         type: String,
         required: true

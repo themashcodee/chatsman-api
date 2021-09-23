@@ -1,6 +1,11 @@
 const CreateMessage = async ({ args, pubsub, Message, Conversation }) => {
     try {
-        const { senderId, content, conversationId } = args
+        const { senderId, content, conversationId, replyContent, replyId } = args
+
+        if ((replyContent && !replyId) || (replyId && !replyContent)) return {
+            success: false,
+            message: "Reply Id and reply content are made for each other, you have to pass both"
+        }
 
         const isConversation = await Conversation.findById(conversationId)
         if (!isConversation) return { success: false, message: "Conversation doesn't exist!" }
@@ -8,14 +13,14 @@ const CreateMessage = async ({ args, pubsub, Message, Conversation }) => {
         if (isConversation.members.indexOf(senderId) === -1)
             return { success: false, message: "You aren't a member of this conversation." }
 
-        const newMessage = new Message({ conversationId, senderId, type: 'TEXT', content })
+        const newMessage = new Message({
+            conversationId, senderId, type: 'TEXT', content, replyId, replyContent
+        })
         await newMessage.save()
 
         isConversation.lastMessage = newMessage
         isConversation.lastMessageTime = newMessage.createdAt
         await isConversation.save()
-
-        // const messages = await Message.find({ conversationId }).sort({ createdAt: -1 }).limit(50)
 
         pubsub.publish(conversationId, { messageAdded: { success: true, message: "", messages: [newMessage] } });
         isConversation.members.forEach(async (id) => {

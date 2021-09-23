@@ -20,7 +20,6 @@ const typeDefs = gql`
     ${GetConversations}
     ${GetMessages}
     ${ChangeDetails}
-
     
     type Query{
         getUser(username:String,id:String):GetUser!
@@ -37,6 +36,8 @@ const typeDefs = gql`
         deleteMessage(id:ID!,senderId:ID!,conversationId:ID!):BaseResponse!
         deleteConversation(conversationId:ID!):BaseResponse!
         deleteAccount(secret:Int!,id:ID!):BaseResponse!
+        blockUser(blockedBy:ID!,blockedTo:ID!):BaseResponse!
+        unBlockUser(unBlockedBy:ID!,unBlockedTo:ID!):BaseResponse!
         
         resetPassword(secret:Int!,email:String!):BaseResponse!
         resetSecretCode(email:String!):BaseResponse!
@@ -45,8 +46,8 @@ const typeDefs = gql`
         logout(id:ID!):BaseResponse!
         loginUser(email:String!,password:String!,secret:Int!):LoginUser!
         
-        createConversation(members:[String!]!):BaseResponse!
-        createMessage(senderId:ID!,content:String!,conversationId:ID!):BaseResponse!
+        createConversation(creator:String!,members:[String!]!):BaseResponse!
+        createMessage(senderId:ID!,content:String!,conversationId:ID!,replyContent:String,replyId:ID):BaseResponse!
         createUser(name:String!,email:String!,username:String!,password:String!):BaseResponse!
     }
 `;

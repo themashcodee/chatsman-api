@@ -3,6 +3,9 @@ const CreateUser = require('./mutations/CreateUser')
 const CreateConversation = require('./mutations/CreateConversation')
 const CreateMessage = require('./mutations/CreateMessage')
 
+const UnBlockUser = require('./mutations/UnBlockUser')
+const BlockUser = require('./mutations/BlockUser')
+
 const ResetPassword = require('./mutations/ResetPassword')
 const ResetSecretCode = require('./mutations/ResetSecretCode')
 const ChangeDetails = require('./mutations/ChangeDetails')
@@ -41,6 +44,8 @@ const resolvers = {
         deleteMessage: async (_, args, { pubsub, bucket, Message, Conversation }) => await DeleteMessage({ Conversation, pubsub, args, Message, bucket }),
         deleteAccount: async (_, args, { User, res, bucket, Conversation, Message }) => await DeleteAccount({ args, Message, User, res, Conversation, bucket }),
         deleteConversation: async (_, args, { pubsub, bucket, Conversation, Message }) => await DeleteConversation({ args, pubsub, Conversation, bucket, Message }),
+        blockUser: async (_, args, { User }) => await BlockUser({ args, User }),
+        unBlockUser: async (_, args, { User }) => await UnBlockUser({ args, User }),
 
         resetPassword: async (_, args, { User }) => await ResetPassword({ args, User }),
         resetSecretCode: async (_, args, { User }) => await ResetSecretCode({ args, User }),

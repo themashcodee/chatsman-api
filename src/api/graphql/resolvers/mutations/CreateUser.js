@@ -11,12 +11,12 @@ async function CreateUser({ args, User }) {
 
         const secret = randomSecret()
         const hashedPassword = await bcrypt.hash(password, 10)
-        const newUser = new User({ name, email, password: hashedPassword, username, secret })
+        const newUser = new User({ name, email, password: hashedPassword, username, secret, blocked: [] })
         await newUser.save()
 
         await sendSecretCode({ email, name, secret })
 
-        return { success: true, message: 'A Secret Code has sent to your email.' }
+        return { success: true, message: 'A Secret Code has been sent to your email.' }
     } catch (err) {
         return { success: false, message: 'There is some server error, try again later.' }
     }

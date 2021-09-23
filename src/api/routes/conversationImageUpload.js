@@ -19,6 +19,8 @@ function conversationImageUpload(app) {
                 const file = req.file
                 const conversationId = req.body.id
                 const senderId = req.body.senderId
+                const replyContent = req.body.replyContent
+                const replyId = req.body.replyId
 
                 if (!file) res.json({ success: false, message: "No Image found!" })
                 const isConversation = await Conversation.findById(conversationId)
@@ -33,7 +35,7 @@ function conversationImageUpload(app) {
                 blobStream.on('finish', async () => {
                     const publicUrl = `https://storage.googleapis.com/${process.env.GCP_BUCKET}/${blob.name}`
 
-                    const newMessage = new Message({ conversationId, senderId, type: 'IMAGE', content: publicUrl })
+                    const newMessage = new Message({ conversationId, senderId, type: 'IMAGE', content: publicUrl, replyContent, replyId })
                     await newMessage.save()
 
                     isConversation.lastMessage = newMessage

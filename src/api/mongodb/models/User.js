@@ -31,6 +31,10 @@ const schema = mongoose.Schema({
         max: 100,
         min: 10
     },
+    blocked: {
+        type: [String],
+        required: true
+    },
     image: {
         type: String,
     },

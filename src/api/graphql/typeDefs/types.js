@@ -9,6 +9,8 @@ const MessageType =
         senderId:ID!
         type:MessageType!
         content:String!
+        replyContent:String
+        replyId:ID
         createdAt:String!
         updatedAt:String!
     }`
@@ -32,8 +34,9 @@ const UserType =
         email:String!
         password:String!
         createdAt:String!
-        image:String
+        blocked:[ID]!
         description:String
+        image:String
     }`;
 
 
