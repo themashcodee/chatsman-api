@@ -20,16 +20,18 @@ const DeleteConversation = require('./mutations/DeleteConversation')
 const DeleteMessage = require('./mutations/DeleteMessage')
 
 // QUERIES
+const IsOnline = require('./queries/IsOnline')
 const GetUser = require('./queries/GetUser')
 const GetConversations = require('./queries/GetConversations')
 const GetMessages = require('./queries/GetMessages')
 
 // SUBSCRIPTION
-const { MessageAdded, ConversationAdded } = require('./subscription/index')
+const { MessageAdded, ConversationAdded, StatusChanged } = require('./subscription/index')
 
 
 const resolvers = {
     Query: {
+        isOnline: async (_, args) => await IsOnline({ args }),
         getUser: async (_, args, { User }, __) => await GetUser({ args, User }),
         getConversations: async (_, args, { User, Conversation }) => await GetConversations({ args, User, Conversation }),
         getMessages: async (_, args, { Message }) => await GetMessages({ args, Message }),
@@ -37,6 +39,7 @@ const resolvers = {
     Subscription: {
         messageAdded: { subscribe: async (_, { conversationId }) => await MessageAdded({ conversationId }) },
         conversationAdded: { subscribe: async (_, { id }) => await ConversationAdded({ id }) },
+        statusChanged: { subscribe: async (_, { email }) => await StatusChanged({ email }) },
     },
     Mutation: {
         deleteWallpaper: async (_, args, { Conversation, pubsub, bucket }) => await DeleteWallpaper({ args, bucket, Conversation, pubsub }),
@@ -51,7 +54,7 @@ const resolvers = {
         resetSecretCode: async (_, args, { User }) => await ResetSecretCode({ args, User }),
         changePassword: async (_, args, { User }) => await ChangePassword({ args, User }),
         changeDetails: async (_, args, { User }) => await ChangeDetails({ args, User }),
-        logout: async (_, args, { User, res }) => await Logout({ args, User, res }),
+        logout: async (_, args, { User, pubsub, res }) => await Logout({ args, pubsub, User, res }),
         loginUser: async (_, args, { User, res }) => await LoginUser({ args, User, res }),
 
         createMessage: async (_, args, { pubsub, Conversation, Message }) => await CreateMessage({ args, pubsub, Message, Conversation }),

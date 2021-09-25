@@ -1,7 +1,7 @@
 const { gql } = require("apollo-server-express");
 
 const { MessageType, UserType, ConversationType } = require('./types')
-const { BaseResponse, ChangeDetails, GetMessages, LoginUser, GetConversations, GetUser } = require('./Response')
+const { isOnline, BaseResponse, ChangeDetails, GetMessages, LoginUser, GetConversations, GetUser } = require('./Response')
 
 const typeDefs = gql`
     interface Response {
@@ -20,8 +20,10 @@ const typeDefs = gql`
     ${GetConversations}
     ${GetMessages}
     ${ChangeDetails}
+    ${isOnline}
     
     type Query{
+        isOnline(email:String!):isOnline!
         getUser(username:String,id:String):GetUser!
         getConversations(id:ID!):GetConversations!
         getMessages(conversationId:ID!,isFull:Boolean):GetMessages!
@@ -29,6 +31,7 @@ const typeDefs = gql`
     type Subscription{
         conversationAdded(id:ID!):GetConversations!
         messageAdded(conversationId:ID!):GetMessages!
+        statusChanged(email:String!):isOnline!
     }
     type Mutation{
         deleteDP(id:ID!):BaseResponse!

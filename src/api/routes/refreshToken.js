@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 const User = require('../mongodb/models/User')
-const { createToken } = require('../helpers/token')
 
 function refreshTokenRoute(app) {
     app.get('/refreshtoken', async (req, res) => {
@@ -15,8 +14,7 @@ function refreshTokenRoute(app) {
                 const isUser = await User.findById(result.id)
                 if (!isUser) return res.json({ success: false, message: "User doesn't exist!" })
 
-                const accessToken = createToken({ id: result.id, type: 'access' })
-                res.json({ success: true, message: "Access token has been regenerated.", user: isUser, token: accessToken })
+                res.json({ success: true, message: "User Authenticated.", user: isUser })
             } catch (err) {
                 res.json({ success: false, message: 'There is some server error, try again later.' })
             }

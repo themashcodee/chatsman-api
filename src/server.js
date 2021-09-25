@@ -7,11 +7,14 @@ const { Message } = require('./api/mongodb/models/Message')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 require('dotenv').config()
+const redisClient = require('./config/redis')
 
 const refreshTokenRoute = require('./api/routes/refreshToken')
 const profileImageUpload = require('./api/routes/profileImageUpload')
 const backgroundUpload = require('./api/routes/backgroundUpload');
 const conversationImageUpload = require('./api/routes/conversationImageUpload');
+
+const getUserFromToken = require('./api/helpers/getUserFromToken')
 
 const typeDefs = require('./api/graphql/typeDefs/index');
 const resolvers = require('./api/graphql/resolvers/index');
@@ -61,6 +64,37 @@ async function startApolloServer() {
             schema,
             execute,
             subscribe,
+            onConnect: async (connectionParams, webSocket, context) => {
+                const token = connectionParams.authorization
+                const user = await getUserFromToken(token)
+                if (user) {
+                    await redisClient.sadd('ONLINE_USERS', user.email)
+
+                    const isUserOnline = await redisClient.sismember('ONLINE_USERS', user.email)
+                    const lastseen = await redisClient.hget('LAST_SEEN', user.email)
+                    pubsub.publish(
+                        user.email,
+                        { statusChanged: { success: true, message: '', online: isUserOnline, lastseen } }
+                    );
+                }
+                return user
+            },
+            onDisconnect: async (webSocket, context) => {
+                const initialContext = await context.initPromise;
+                if (initialContext) {
+                    if (initialContext.email) {
+                        await redisClient.srem('ONLINE_USERS', initialContext.email)
+                        await redisClient.hset('LAST_SEEN', initialContext.email, Date.now())
+
+                        const isUserOnline = await redisClient.sismember('ONLINE_USERS', initialContext.email)
+                        const lastseen = await redisClient.hget('LAST_SEEN', initialContext.email)
+                        pubsub.publish(
+                            initialContext.email,
+                            { statusChanged: { success: true, message: '', online: isUserOnline, lastseen } }
+                        );
+                    }
+                }
+            },
         }, {
             server: httpServer,
             path: server.graphqlPath,
@@ -88,5 +122,4 @@ async function startApolloServer() {
         console.log(err)
     }
 }
-
 startApolloServer()
