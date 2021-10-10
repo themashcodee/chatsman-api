@@ -1,33 +1,32 @@
 {
-  "name": "server",
-  "version": "1.0.0",
-  "description": "",
-  "main": "src/server.js",
-  "scripts": {
-    "dev": "supervisor ./src/server.js"
-  },
-  "keywords": [],
-  "author": "Mash Codee",
-  "license": "ISC",
-  "devDependencies": {},
-  "dependencies": {
-    "@google-cloud/storage": "^5.14.2",
-    "@graphql-tools/schema": "^8.2.0",
-    "@sendgrid/mail": "^7.4.6",
-    "apollo-server-express": "^3.3.0",
-    "bcrypt": "^5.0.1",
-    "cookie-parser": "^1.4.5",
-    "cors": "^2.8.5",
-    "dotenv": "^10.0.0",
-    "express": "^4.17.1",
-    "graphql": "^15.5.2",
-    "graphql-subscriptions": "^1.2.1",
-    "handy-redis": "^2.3.1",
-    "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.0.4",
-    "multer": "^1.4.3",
-    "nodemailer": "^6.6.3",
-    "redis": "^3.1.2",
-    "subscriptions-transport-ws": "^0.9.19"
-  }
+	"name": "server",
+	"version": "1.0.0",
+	"description": "",
+	"main": "src/server.js",
+	"scripts": {
+		"dev": "supervisor ./src/server.js"
+	},
+	"keywords": [],
+	"author": "Mash Codee",
+	"license": "ISC",
+	"devDependencies": {},
+	"dependencies": {
+		"@google-cloud/storage": "^5.14.2",
+		"@graphql-tools/schema": "^8.2.0",
+		"@sendgrid/mail": "^7.4.6",
+		"apollo-server-express": "^3.3.0",
+		"bcrypt": "^5.0.1",
+		"cookie-parser": "^1.4.5",
+		"cors": "^2.8.5",
+		"dotenv": "^10.0.0",
+		"express": "^4.17.1",
+		"graphql": "^15.5.2",
+		"graphql-subscriptions": "^1.2.1",
+		"handy-redis": "^2.3.1",
+		"jsonwebtoken": "^8.5.1",
+		"mongoose": "^6.0.4",
+		"multer": "^1.4.3",
+		"redis": "^3.1.2",
+		"subscriptions-transport-ws": "^0.9.19"
+	}
 }
