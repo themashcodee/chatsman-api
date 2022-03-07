@@ -9,8 +9,7 @@ const DeleteWallpaper = async ({ args, Conversation, pubsub, bucket }) => {
 
         if (!isConversation.wallpaper) return { success: false, message: "No wallpaper found in this conversation!" }
 
-        const existingImage = isConversation.wallpaper.substring(47)
-        await bucket.file(existingImage).delete()
+        if (isConversation.wallpaper.includes('cloudinary.com')) await bucket.deleteImage(isConversation.wallpaper)
 
         isConversation.wallpaper = ''
         await isConversation.save()

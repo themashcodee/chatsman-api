@@ -7,8 +7,7 @@ const DeleteDP = async ({ args, User, bucket }) => {
 
         if (!isUser.image) return { success: false, message: "You don't have a Profile Picture" }
 
-        const existingImage = isUser.image.substring(47)
-        await bucket.file(existingImage).delete()
+        if (isUser.image.includes('cloudinary.com')) await bucket.deleteImage(isUser.image)
 
         isUser.image = ''
         await isUser.save()

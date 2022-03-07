@@ -24,30 +24,19 @@ const { createServer } = require('http');
 const { execute, subscribe } = require('graphql');
 const { SubscriptionServer } = require('subscriptions-transport-ws');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
+const { uploadFile, deleteImage } = require('./config/cloudinary')
 const pubsub = require('./config/pubsub')
-
-const bucket = require('./config/gcp');
-
 
 async function startApolloServer() {
     try {
         const app = express();
-
-        // await bucket.setCorsConfiguration([
-        //     {
-        //         maxAgeSeconds: 3600,
-        //         method: ["GET"],
-        //         origin: ['http://localhost:3000', 'https://chatsman.vercel.app'],
-        //         responseHeader: ['Content-Type'],
-        //     },
-        // ]);
 
         const httpServer = createServer(app);
         const schema = makeExecutableSchema({ typeDefs, resolvers });
 
         const server = new ApolloServer({
             schema,
-            context: ({ req, res }) => ({ token: req.headers.authorization, res, User, bucket, pubsub, Conversation, Message }),
+            context: ({ req, res }) => ({ token: req.headers.authorization, res, User, bucket: { uploadFile, deleteImage }, pubsub, Conversation, Message }),
             introspection: typeof window !== undefined,
             plugins: [{
                 async serverWillStart() {

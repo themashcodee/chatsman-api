@@ -7,24 +7,21 @@ async function DeleteAccount({ args, User, res, bucket, Conversation, Message })
         if (isUser.secret !== secret) return { success: false, message: "Invalid secret code!" }
 
 
-        if (isUser.image) {
-            const existingImage = isUser.image.substring(47)
-            await bucket.file(existingImage).delete()
+        if (isUser.image && isUser.image.includes('cloudinary.com')) {
+            await bucket.deleteImage(isUser.image)
         }
 
         await User.deleteOne({ secret, _id: id })
 
         const conversations = await Conversation.find({ members: { $in: [id] } })
         conversations.forEach(async (conversation) => {
-            if (conversation.wallpaper) {
-                const existingImage = conversation.wallpaper.substring(47)
-                await bucket.file(existingImage).delete()
+            if (conversation.wallpaper && conversation.wallpaper.includes('cloudinary.com')) {
+                await bucket.deleteImage(conversation.wallpaper)
             }
             const imagesMessages = await Message.find({ conversationId: conversation._id, type: "IMAGE" })
             if (imagesMessages.length) {
                 imagesMessages.forEach(async (message) => {
-                    const existingImage = message.content.substring(47)
-                    await bucket.file(existingImage).delete()
+                    if (message.content.includes('cloudinary.com')) await bucket.deleteImage(message.content)
                 })
             }
             await Message.deleteMany({ conversationId: conversation._id })

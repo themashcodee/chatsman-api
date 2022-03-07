@@ -1,12 +1,10 @@
 const multer = require('../middlewares/multer')
 const Conversation = require('../mongodb/models/Conversation')
 const { Message } = require('../mongodb/models/Message')
-const randomSecret = require('../helpers/randomSecret')
 require('dotenv').config()
 const pubsub = require('../../config/pubsub')
-
+const { uploadFile } = require('../../config/cloudinary')
 const upload = multer.single('file')
-const bucket = require('../../config/gcp')
 
 function conversationImageUpload(app) {
     app.post('/conversationimageupload', (req, res) => {
@@ -28,29 +26,21 @@ function conversationImageUpload(app) {
 
                 if (isConversation.members.indexOf(senderId) === -1) return { success: false, messsage: "You aren't a member of this conversation." }
 
-                const newFileName = randomSecret() + file.originalname
-                const blob = bucket.file(newFileName)
-                const blobStream = blob.createWriteStream()
-                blobStream.on('error', err => res.json({ success: false, message: "There is some server error, try again later" }))
-                blobStream.on('finish', async () => {
-                    const publicUrl = `https://storage.googleapis.com/${process.env.GCP_BUCKET}/${blob.name}`
+                const publicUrl = await uploadFile(file)
+                const newMessage = new Message({ conversationId, senderId, type: 'IMAGE', content: publicUrl, replyContent, replyId })
+                await newMessage.save()
 
-                    const newMessage = new Message({ conversationId, senderId, type: 'IMAGE', content: publicUrl, replyContent, replyId })
-                    await newMessage.save()
+                isConversation.lastMessage = newMessage
+                isConversation.lastMessageTime = newMessage.createdAt
+                await isConversation.save()
 
-                    isConversation.lastMessage = newMessage
-                    isConversation.lastMessageTime = newMessage.createdAt
-                    await isConversation.save()
-
-                    pubsub.publish(conversationId, { messageAdded: { success: true, message: "", messages: [newMessage] } });
-                    isConversation.members.forEach(async (id) => {
-                        const conversations = await Conversation.find({ members: { $in: [id] } }).sort({ updatedAt: -1 })
-                        pubsub.publish(id, { conversationAdded: { success: true, message: "", conversations } });
-                    })
-
-                    res.json({ success: true, message: 'Message has been sent!' })
+                pubsub.publish(conversationId, { messageAdded: { success: true, message: "", messages: [newMessage] } });
+                isConversation.members.forEach(async (id) => {
+                    const conversations = await Conversation.find({ members: { $in: [id] } }).sort({ updatedAt: -1 })
+                    pubsub.publish(id, { conversationAdded: { success: true, message: "", conversations } });
                 })
-                blobStream.end(file.buffer)
+
+                res.json({ success: true, message: 'Message has been sent!' })
             } catch (err) {
                 res.json({ success: false, message: "There is some server error, try again later." })
             }

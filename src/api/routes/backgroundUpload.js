@@ -1,11 +1,10 @@
 const multer = require('../middlewares/multer')
 const Conversation = require('../mongodb/models/Conversation')
-const randomSecret = require('../helpers/randomSecret')
 require('dotenv').config()
 const pubsub = require('../../config/pubsub')
+const { uploadFile, deleteImage } = require('../../config/cloudinary')
 
 const upload = multer.single('file')
-const bucket = require('../../config/gcp')
 
 function backgroundUpload(app) {
     app.post('/backgroundupload', (req, res) => {
@@ -22,27 +21,18 @@ function backgroundUpload(app) {
                 const isConversation = await Conversation.findById(convId)
                 if (!isConversation) return res.json({ success: false, message: "Conversation doesn't exist!" })
 
-                const newFileName = randomSecret() + file.originalname
-                const blob = bucket.file(newFileName)
-                const blobStream = blob.createWriteStream()
-                blobStream.on('error', err => res.json({ success: false, message: "There is some server error, try again later" }))
-                blobStream.on('finish', async () => {
-                    const publicUrl = `https://storage.googleapis.com/${process.env.GCP_BUCKET}/${blob.name}`
-                    const oldUrl = isConversation.wallpaper || null
-                    isConversation.wallpaper = publicUrl
-                    await isConversation.save()
-                    isConversation.members.forEach(async (id) => {
-                        const conversations = await Conversation.find({ members: { $in: [id] } }).sort({ updatedAt: -1 })
-                        pubsub.publish(id, { conversationAdded: { success: true, message: "", conversations } });
-                    })
-                    res.json({ success: true, message: 'Background has been updated!', url: publicUrl })
+                const oldUrl = isConversation.wallpaper || null
+                const url = await uploadFile(file)
+                isConversation.wallpaper = url
+                await isConversation.save()
 
-                    if (oldUrl) {
-                        const existingImage = oldUrl.substring(47)
-                        await bucket.file(existingImage).delete()
-                    }
+                isConversation.members.forEach(async (id) => {
+                    const conversations = await Conversation.find({ members: { $in: [id] } }).sort({ updatedAt: -1 })
+                    pubsub.publish(id, { conversationAdded: { success: true, message: "", conversations } });
                 })
-                blobStream.end(file.buffer)
+                res.json({ success: true, message: 'Background has been updated!', url })
+
+                if (oldUrl && oldUrl.includes('cloudinary.com')) await deleteImage(oldUrl)
             } catch (err) {
                 res.json({ success: false, message: "There is some server error, try again later." })
             }

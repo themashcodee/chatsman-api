@@ -1,10 +1,8 @@
 const multer = require('../middlewares/multer')
 const User = require('../mongodb/models/User')
-const randomSecret = require('../helpers/randomSecret')
 require('dotenv').config()
-
+const { uploadFile, deleteImage } = require('../../config/cloudinary')
 const upload = multer.single('file')
-const bucket = require('../../config/gcp')
 
 function profileImageUpload(app) {
     app.post('/profileimageupload', (req, res) => {
@@ -21,23 +19,14 @@ function profileImageUpload(app) {
                 const isUser = await User.findById(userId)
                 if (!isUser) return res.json({ success: false, message: "User doesn't exist" })
 
-                const newFileName = randomSecret() + file.originalname
-                const blob = bucket.file(newFileName)
-                const blobStream = blob.createWriteStream()
-                blobStream.on('error', err => res.json({ success: false, message: "There is some server error, try again later" }))
-                blobStream.on('finish', async () => {
-                    const publicUrl = `https://storage.googleapis.com/${process.env.GCP_BUCKET}/${blob.name}`
-                    const oldUrl = isUser.image || null
-                    isUser.image = publicUrl
-                    await isUser.save()
-                    res.json({ success: true, message: 'Profile picture has been updated!', user: isUser })
+                const url = await uploadFile(file);
+                const oldUrl = isUser.image || null
+                isUser.image = url
+                await isUser.save()
 
-                    if (oldUrl) {
-                        const existingImage = oldUrl.substring(47)
-                        await bucket.file(existingImage).delete()
-                    }
-                })
-                blobStream.end(file.buffer)
+                res.json({ success: true, message: 'Profile picture has been updated!', user: isUser })
+
+                if (oldUrl && oldUrl.includes('cloudinary.com')) await deleteImage(oldUrl)
             } catch (err) {
                 res.json({ success: false, message: "There is some server error, try again later." })
             }

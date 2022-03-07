@@ -8,17 +8,13 @@ const DeleteChat = async ({ args, pubsub, Conversation, Message, bucket }) => {
         const imagesMessages = await Message.find({ conversationId, type: "IMAGE" })
         if (imagesMessages.length) {
             imagesMessages.forEach(async (message) => {
-                const existingImage = message.content.substring(47)
-                await bucket.file(existingImage).delete()
+                if (message.content.includes('cloudinary.com')) await bucket.deleteImage(message.content)
             })
         }
 
         await Message.deleteMany({ conversationId })
 
-        if (isConversation.wallpaper) {
-            const existingImage = isConversation.wallpaper.substring(47)
-            await bucket.file(existingImage).delete()
-        }
+        if (isConversation.wallpaper && isConversation.wallpaper.includes('cloudinary.com')) await bucket.deleteImage(isConversation.wallpaper)
         await Conversation.deleteOne({ _id: conversationId })
 
         isConversation.members.forEach(async (id) => {

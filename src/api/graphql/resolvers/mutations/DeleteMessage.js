@@ -8,9 +8,8 @@ const DeleteMessage = async ({ args, pubsub, bucket, Message, Conversation }) =>
         const isMessage = await Message.findOne({ _id: id, senderId, conversationId })
         if (!isMessage) return { success: false, message: "Message does not exist." }
 
-        if (isMessage.type === 'IMAGE') {
-            const existingImage = isMessage.content.substring(47)
-            await bucket.file(existingImage).delete()
+        if (isMessage.type === 'IMAGE' && isMessage.content.includes('cloudinary.com')) {
+            await bucket.deleteImage(isMessage.content)
         }
         await Message.deleteOne({ _id: id, senderId, conversationId })
 
