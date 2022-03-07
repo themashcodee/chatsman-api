@@ -4,12 +4,14 @@
 	"description": "",
 	"main": "src/server.js",
 	"scripts": {
-		"dev": "supervisor ./src/server.js"
+		"dev": "nodemon ./src/server.js"
 	},
 	"keywords": [],
 	"author": "Mash Codee",
 	"license": "ISC",
-	"devDependencies": {},
+	"devDependencies": {
+		"nodemon": "^2.0.15"
+	},
 	"dependencies": {
 		"@google-cloud/storage": "^5.14.2",
 		"@graphql-tools/schema": "^8.2.0",

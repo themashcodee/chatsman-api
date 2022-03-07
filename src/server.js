@@ -33,14 +33,14 @@ async function startApolloServer() {
     try {
         const app = express();
 
-        await bucket.setCorsConfiguration([
-            {
-                maxAgeSeconds: 3600,
-                method: ["GET"],
-                origin: ['http://localhost:3000', 'https://chatsman.vercel.app'],
-                responseHeader: ['Content-Type'],
-            },
-        ]);
+        // await bucket.setCorsConfiguration([
+        //     {
+        //         maxAgeSeconds: 3600,
+        //         method: ["GET"],
+        //         origin: ['http://localhost:3000', 'https://chatsman.vercel.app'],
+        //         responseHeader: ['Content-Type'],
+        //     },
+        // ]);
 
         const httpServer = createServer(app);
         const schema = makeExecutableSchema({ typeDefs, resolvers });
